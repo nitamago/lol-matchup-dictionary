@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://nitamago.github.io',
-  base: '/',
+  base: '/lol-matchup-dictionary/',
   vite: {
     plugins: [tailwindcss()],
   },

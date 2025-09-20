@@ -26,7 +26,7 @@ const roles = [
 				<div class="bg-center bg-cover min-h-[900px] lg:min-h-[540px]" style="background-image: url('https://nitamago.github.io/lol-matchup-dictionary/icons/map_fix.PNG');">	
 					<div class="roles">
 					{roles.map(role => (
-						<a href={`/${role.name.toLowerCase()}`} class={role.classStr}>
+						<a href={`/lol-matchup-dictionary/${role.name.toLowerCase()}`} class={role.classStr}>
 						<img src={role.icon} alt={role.name} class="relative w-[150px] lg:w-[100px] rounded-[50%]"/>
 						</a>
 					))}
