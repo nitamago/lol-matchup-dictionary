@@ -74,7 +74,7 @@ const { role, champions, data, enMap } = Astro.props;
             html += `<div class="lg:min-h-1/2 bg-gray-100 p-4 border rounded">`;
             html += `<h3>有利なチャンピオン(カウンター)</h3><ul>`;
             champData.loses.forEach(l => {
-              html += `<li><a href="/${role}/${champData.name}/${l.name}" class="text-blue-600 hover:underline">${l.name}</a> (勝率: ${50-l.delta2}%)</li>`;
+              html += `<li><a href="/lol-matchup-dictionary/${role}/${champData.name}/${l.name}" class="text-blue-600 hover:underline">${l.name}</a> (勝率: ${50-l.delta2}%)</li>`;
             });
             html += `</ul>`;
             html += `</div>`;
@@ -82,7 +82,7 @@ const { role, champions, data, enMap } = Astro.props;
             html += `<div class="lg:min-h-1/2 bg-gray-100 p-4 border rounded">`;
             html += `<h3>不利なチャンピオン</h3><ul>`;
             champData.beats.forEach(b => {
-              html += `<li><a href="/${role}/${champData.name}/${b.name}" class="text-blue-600 hover:underline">${b.name}</a> (勝率: ${50-b.delta2}%)</li>`;
+              html += `<li><a href="/lol-matchup-dictionary/${role}/${champData.name}/${b.name}" class="text-blue-600 hover:underline">${b.name}</a> (勝率: ${50-b.delta2}%)</li>`;
             });
             html += `</ul>`;
             html += `</div>`;
