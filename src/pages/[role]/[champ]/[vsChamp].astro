@@ -1,0 +1,80 @@
+---
+import fs from "fs";
+import path from "path";
+
+export async function getStaticPaths() {
+  const filePath = `./src/data/name_to_ja_map.json`;
+  const to_ja_map = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  const to_en_map = Object.fromEntries(Object.entries(to_ja_map).map(([k, v]) => [v, k]));
+
+  const roles = ["top", "mid", "jg", "bot", "sup"];
+  const matchupsKeysByRole: Record<string, string[]> = {};
+  const paths = [];
+
+  for (const role of roles) {
+    try {
+      const filePath = `./src/data/${role}_matchups.json`;
+      const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      console.log(data);
+      const championKeys: string[] = Object.keys(data);
+      console.log(championKeys);
+      matchupsKeysByRole[role] = championKeys;
+
+      for (const champkey of championKeys) { 
+        data[champkey] = data[champkey] || {};
+        // 有利な相手
+        const advantage = data[champkey]["loses"] || []
+        if (advantage) {
+          for (const vs of advantage) {
+              // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });
+              paths.push({ params: { role, champ: champkey, vsChamp: vs.name} });
+          }
+        }
+        // 不利な相手
+        const disadvantage = data[champkey]["beats"] || []
+        if (disadvantage) {
+          for (const vs of disadvantage) {
+            // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });
+            paths.push({ params: { role, champ: champkey, vsChamp: vs.name } });
+          }
+        }
+      }
+    } catch (err) {
+      matchupsKeysByRole[role] = [];
+      console.warn(`${role}_matchups.json が読み込めません:`, err);
+    }
+  }
+
+
+  paths.push({ params: { role:"top", champ: "Aatrox", vsChamp: "Darius" } });
+  return paths;
+
+
+}
+
+
+const { role, champ, vsChamp } = Astro.params;
+
+// URLデコード
+const champDecode = decodeURIComponent(champ);
+const vsChampDecode = decodeURIComponent(vsChamp);
+
+// // HTML ファイルを読み込む
+let content = "<p>解説が見つかりません</p>";
+try {
+  console.log(`./public/matchups/explanation_${role}_${champDecode}_vs_${vsChampDecode}.html`)
+  const filePath = path.resolve(`./public/matchups/explanation_${role}_${champDecode}_vs_${vsChampDecode}.html`);
+  content = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
+} catch (err) {
+  console.warn("HTMLが見つかりません:", err);
+}
+---
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    {content === "<p>解説が見つかりません</p>" ? <h2>{champDecode} vs {vsChampDecode}</h2> : ""}
+    <div set:html={content}></div>
+  </body>
+</html>

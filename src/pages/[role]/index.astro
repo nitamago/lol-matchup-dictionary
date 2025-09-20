@@ -1,0 +1,128 @@
+---
+import "../../styles/global.css";
+import fs from "fs";
+import path from "path";
+
+// JSON のトップレベルはオブジェクトなので keys で role を取得
+export async function getStaticPaths() {
+  const filePath = `./src/data/name_to_ja_map.json`;
+  const to_ja_map = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  const to_en_map = Object.fromEntries(Object.entries(to_ja_map).map(([k, v]) => [v, k]));
+
+  const roles = ["top", "mid", "jg", "bot", "sup"];
+  const matchupsByRole = {};
+  const matchupsKeysByRole = {};
+  const dataByRole = {};
+
+  for (const role of roles) {
+    try {
+      const filePath = `./src/data/${role}_matchups.json`;
+      const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      dataByRole[role] = data;
+      const championKeys = Object.keys(data)
+      matchupsKeysByRole[role] = championKeys;
+      const advantage = championKeys.map(c => data[c]["loses"]).flat();
+      const disadvantage = championKeys.map(c => data[c]["beats"]).flat();
+      const allList = advantage.concat(disadvantage);
+      matchupsByRole[role] = allList || []; // <- ここが重要
+    } catch (err) {
+      matchupsByRole[role] = [];
+      dataByRole[role] = [];
+      console.warn(`${role}_matchups.json が読み込めません:`, err);
+    }
+  }
+
+  return roles.map((role) => ({
+    params: { role },
+    props: { role, champions: matchupsKeysByRole[role], data: dataByRole[role], enMap: to_en_map} // role に対応する配列を渡す
+  }));
+}
+
+const { role, champions, data, enMap } = Astro.props;
+
+---
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <title>{role} ロールのチャンピオン一覧</title> -->
+    <title>相手チャンピオン一覧</title>
+    <script type="module" defer>
+      window.addEventListener("load", () => {
+        const detailDiv = document.getElementById("champion-detail");
+        const roleDataDiv = document.getElementById("role-data");
+        const roleData = JSON.parse(roleDataDiv.textContent);
+        const enMapDiv = document.getElementById("role-en-map");
+        const enMap = JSON.parse(enMapDiv.textContent);
+        const role = document.getElementById("role").textContent.trim();
+
+        const links = document.querySelectorAll("#champion-list a");
+
+        links.forEach(link => {
+          link.addEventListener("click", e => {
+            e.preventDefault();
+            const champName = link.dataset.champ;
+            const champData = roleData[champName];
+
+            if (!champData) {
+              detailDiv.innerHTML = "<p>データが見つかりません</p>";
+              return;
+            }
+
+            // 詳細リスト生成（右側）
+            let html = `<h2>${champData.name}</h2>`;
+
+            html += `<div class="lg:min-h-1/2 bg-gray-100 p-4 border rounded">`;
+            html += `<h3>有利なチャンピオン(カウンター)</h3><ul>`;
+            champData.loses.forEach(l => {
+              html += `<li><a href="/${role}/${champData.name}/${l.name}" class="text-blue-600 hover:underline">${l.name}</a> (勝率: ${50-l.delta2}%)</li>`;
+            });
+            html += `</ul>`;
+            html += `</div>`;
+
+            html += `<div class="lg:min-h-1/2 bg-gray-100 p-4 border rounded">`;
+            html += `<h3>不利なチャンピオン</h3><ul>`;
+            champData.beats.forEach(b => {
+              html += `<li><a href="/${role}/${champData.name}/${b.name}" class="text-blue-600 hover:underline">${b.name}</a> (勝率: ${50-b.delta2}%)</li>`;
+            });
+            html += `</ul>`;
+            html += `</div>`;
+
+            detailDiv.innerHTML = html;
+          });
+        });
+      });
+    </script>
+  </head>
+  <body class="flex max-lg:flex-col max-lg:text-5xl gap-4 p-4">
+    <!-- 左側：チャンピオン一覧 -->
+    <div class="w-1/2">
+      <!-- <h1>{role} ロールのチャンピオン</h1> -->
+      <h1>対面チャンピオン一覧</h1>
+      <ul id="champion-list">
+        {champions.map(c => (
+          <li>
+            <a href="#" data-champ={c} class="text-blue-600 hover:underline">{c}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- 右側：詳細表示 -->
+    <div id="champion-detail" class="lg:w-1/2 sticky top-0">
+      <p>チャンピオンを選択してください</p>
+    </div>
+
+    <!-- 埋め込みデータ -->
+    <div id="role" class="hidden">
+      {role}
+    </div>
+    <!-- 埋め込みデータ -->
+    <div id="role-data" class="hidden">
+      {JSON.stringify(data)}
+    </div>
+    <!-- 埋め込みデータ -->
+    <div id="role-en-map" class="hidden">
+      {JSON.stringify(enMap)}
+    </div>
+  </body>
+</html>
