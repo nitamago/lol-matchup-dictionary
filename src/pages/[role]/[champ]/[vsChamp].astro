@@ -15,9 +15,9 @@ export async function getStaticPaths() {
     try {
       const filePath = `./src/data/${role}_matchups.json`;
       const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-      console.log(data);
+      // console.log(data);
       const championKeys: string[] = Object.keys(data);
-      console.log(championKeys);
+      // console.log(championKeys);
       matchupsKeysByRole[role] = championKeys;
 
       for (const champkey of championKeys) { 
