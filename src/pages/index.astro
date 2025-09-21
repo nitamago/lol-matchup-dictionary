@@ -38,7 +38,7 @@ const roles = [
 					<div class="roles">
 					{roles.map(role => (
 						<a href={`/lol-matchup-dictionary/${role.name.toLowerCase()}`} class={role.classStr}>
-						<img src={role.icon} alt={role.name} class="relative w-[150px] lg:w-[100px] rounded-[50%]"/>
+						<img src={role.icon} alt={role.name} class="relative w-[150px] lg:w-[100px] rounded-[50%] hover:ring-4 hover:ring-blue-400 hover:ring-offset-2 hover:scale-105"/>
 						</a>
 					))}
 					</div>
