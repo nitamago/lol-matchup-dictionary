@@ -70,6 +70,15 @@ try {
 <html>
   <head>
     <meta charset="UTF-8" />
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BSBMFV37ZG"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'G-BSBMFV37ZG');
+		</script>
   </head>
   <body>
     {content === "<p>解説が見つかりません</p>" ? <h2>{champDecode} vs {vsChampDecode}</h2> : ""}

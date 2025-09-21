@@ -44,6 +44,15 @@ const { role, champions, data, enMap } = Astro.props;
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BSBMFV37ZG"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'G-BSBMFV37ZG');
+		</script>
     <!-- <title>{role} ロールのチャンピオン一覧</title> -->
     <title>相手チャンピオン一覧</title>
     <script type="module" defer>
