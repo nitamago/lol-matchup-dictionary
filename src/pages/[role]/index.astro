@@ -107,7 +107,7 @@ const { role, champions, data, enMap } = Astro.props;
     <div class="w-1/2">
       <!-- <h1>{role} ロールのチャンピオン</h1> -->
       <h1>対面チャンピオン一覧</h1>
-      <ul id="champion-list">
+      <ul id="champion-list" class="bg-gray-100 p-4 border rounded">
         {champions.map(c => (
           <li>
             <a href="#" data-champ={c} class="text-blue-600 hover:underline">{c}</a>
