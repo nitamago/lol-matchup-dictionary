@@ -80,6 +80,10 @@ const { role, champions, data, enMap } = Astro.props;
             // 詳細リスト生成（右側）
             let html = `<h2>${champData.name}</h2>`;
 
+            html += `<p class="mb-4 text-gray-700 text-sm">
+              ※右のチャンピオン名をクリックすると、詳細な解説ページが表示されます
+            </p>`;
+
             html += `<div class="lg:min-h-1/2 bg-gray-100 p-4 border rounded">`;
             html += `<h3>有利なチャンピオン(カウンター)</h3><ul>`;
             champData.loses.forEach(l => {
@@ -120,7 +124,9 @@ const { role, champions, data, enMap } = Astro.props;
 
     <!-- 右側：詳細表示 -->
     <div id="champion-detail" class="lg:w-1/2 sticky top-0">
-      <p>チャンピオンを選択してください</p>
+      <p class="font-semibold text-blue-700">
+        左の一覧から対面チャンピオン名をクリックしてください
+      </p>
     </div>
 
     <!-- 埋め込みデータ -->
