@@ -80,7 +80,10 @@ const { role, champions, data, enMap } = Astro.props;
             // 詳細リスト生成（右側）
             let html = `<h2>${champData.name}</h2>`;
 
-            html += `<p class="mb-4 text-gray-700 text-sm">
+            html += `<p class="block lg:hidden mb-4 text-gray-700">
+              ※下のチャンピオン名をクリックすると、詳細な解説ページが表示されます
+            </p>`;
+            html += `<p class="hidden lg:block mb-4 text-gray-700">
               ※右のチャンピオン名をクリックすると、詳細な解説ページが表示されます
             </p>`;
 
@@ -108,10 +111,10 @@ const { role, champions, data, enMap } = Astro.props;
   </head>
   <body class="flex max-lg:flex-col max-lg:text-5xl gap-4 p-4">
     <!-- 左側：チャンピオン一覧 -->
-    <div class="w-1/2">
+    <div class="w-full h-[30vh] lg:w-1/2 lg:h-full">
       <!-- <h1>{role} ロールのチャンピオン</h1> -->
       <h1>対面チャンピオン一覧</h1>
-      <ul id="champion-list" class="bg-gray-100 p-4 border rounded">
+      <ul id="champion-list" class="h-[90%] overflow-scroll bg-gray-100 p-4 border rounded">
         {champions.slice() // 元配列を壊さないようコピー
                   .sort((a, b) => a.localeCompare(b, "ja")) // 日本語に対応した昇順ソート
                   .map(c => (
@@ -124,7 +127,10 @@ const { role, champions, data, enMap } = Astro.props;
 
     <!-- 右側：詳細表示 -->
     <div id="champion-detail" class="lg:w-1/2 sticky top-0">
-      <p class="font-semibold text-blue-700">
+      <p class="block lg:hidden font-semibold text-blue-700">
+        上の一覧から対面チャンピオン名をクリックしてください
+      </p>
+      <p class="hidden lg:block font-semibold text-blue-700">
         左の一覧から対面チャンピオン名をクリックしてください
       </p>
     </div>
