@@ -9,22 +9,22 @@ export async function getStaticPaths() {
   const to_ja_map = JSON.parse(fs.readFileSync(filePath, "utf-8"));
   const to_en_map = Object.fromEntries(Object.entries(to_ja_map).map(([k, v]) => [v, k]));
 
-  const roles = ["top", "mid", "jg", "bot", "sup"];
-  const matchupsByRole = {};
-  const matchupsKeysByRole = {};
-  const dataByRole = {};
+  const roles: string[] = ["top", "mid", "jg", "bot", "sup"];
+  const matchupsByRole: Record<string, any> = {};
+  const matchupsKeysByRole: Record<string, any> = {};
+  const dataByRole: Record<string, any> = {};
 
   for (const role of roles) {
     try {
       const filePath = `./src/data/${role}_matchups.json`;
-      const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      const data: Record<string, any> = JSON.parse(fs.readFileSync(filePath, "utf-8"));
       dataByRole[role] = data;
       const championKeys = Object.keys(data)
       matchupsKeysByRole[role] = championKeys;
       const advantage = championKeys.map(c => data[c]["loses"]).flat();
       const disadvantage = championKeys.map(c => data[c]["beats"]).flat();
       const allList = advantage.concat(disadvantage);
-      matchupsByRole[role] = allList || []; // <- ここが重要
+      matchupsByRole[role] = allList || []; 
     } catch (err) {
       matchupsByRole[role] = [];
       dataByRole[role] = [];
@@ -79,6 +79,9 @@ const { role, champions, data, enMap } = Astro.props;
 
             // 詳細リスト生成（右側）
             let html = `<h2>${champData.name}</h2>`;
+            const formatter = new Intl.NumberFormat('ja-JP');
+            html += `<h3>ゲーム数: ${formatter.format(champData.game_count)}</h3>`;
+            html += `${champData.game_count < 14000 ? '<p class="text-red-700">※データ数が少ないため、参考程度にしてください</p>' : ''}`;
 
             html += `<p class="block lg:hidden mb-4 text-gray-700">
               ※下のチャンピオン名をクリックすると、詳細な解説ページが表示されます
@@ -87,7 +90,7 @@ const { role, champions, data, enMap } = Astro.props;
               ※右のチャンピオン名をクリックすると、詳細な解説ページが表示されます
             </p>`;
 
-            html += `<div class="lg:min-h-1/2 bg-gray-100 p-4 border rounded">`;
+            html += `<div class="lg:min-h-[20vh] lg:overflow-scroll bg-gray-100 p-4 border rounded">`;
             html += `<h3>有利なチャンピオン(カウンター)</h3><ul>`;
             champData.loses.forEach(l => {
               html += `<li><a href="/lol-matchup-dictionary/${role}/${champData.name}/${l.name}" class="text-blue-600 hover:underline">${l.name}</a> (勝率: ${(50-l.delta2).toFixed(1)}%)</li>`;
@@ -95,7 +98,7 @@ const { role, champions, data, enMap } = Astro.props;
             html += `</ul>`;
             html += `</div>`;
 
-            html += `<div class="lg:min-h-1/2 bg-gray-100 p-4 border rounded">`;
+            html += `<div class="lg:min-h-[20vh] lg:overflow-scroll bg-gray-100 p-4 border rounded">`;
             html += `<h3>不利なチャンピオン</h3><ul>`;
             champData.beats.forEach(b => {
               html += `<li><a href="/lol-matchup-dictionary/${role}/${champData.name}/${b.name}" class="text-blue-600 hover:underline">${b.name}</a> (勝率: ${(50-b.delta2).toFixed(1)}%)</li>`;
@@ -111,7 +114,7 @@ const { role, champions, data, enMap } = Astro.props;
   </head>
   <body class="flex max-lg:flex-col max-lg:text-5xl gap-4 p-4">
     <!-- 左側：チャンピオン一覧 -->
-    <div class="w-full h-[30vh] lg:w-1/2 lg:h-full">
+    <div class="w-full h-[30vh] lg:w-1/2 lg:h-[100vh]">
       <!-- <h1>{role} ロールのチャンピオン</h1> -->
       <h1>対面チャンピオン一覧</h1>
       <ul id="champion-list" class="h-[90%] overflow-scroll bg-gray-100 p-4 border rounded">

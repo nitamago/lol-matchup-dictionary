@@ -19,6 +19,17 @@ import path from 'path';
   const roles = ["mid", "top", "jg", "sup", "bot"];
 
   for (const role of roles) {
+    const reasonJsonPath = `http://localhost:5173/lol-matchup-quiz/lol-matchup-quiz/ja/${role}_reason.json`;
+    console.log('reasonJsonPath:', reasonJsonPath);
+
+    const reasonResponse = await fetch(reasonJsonPath);
+    if (!reasonResponse.ok) {
+      alert("データが見つかりません");
+      return;
+    }
+    const reasonJsonData = await reasonResponse.json();
+
+    const opponents = Object.keys(reasonJsonData);
 
     await page.goto('http://localhost:5173/');
 
@@ -31,85 +42,47 @@ import path from 'path';
     // ラベルが「日本語」の option を選ぶ
     await page.selectOption('.translate-select', { label: '日本語' });
 
-    // 例: ボタンをクリック
-    await page.click('button.next-button');
-    await page.click(`button.role-btn.${role}`);
-    await page.click('//*[@id="root"]/div/div/div[2]/div[2]/button');
+    // explainボタンをクリック
+    await page.click('#explain-button');
+    await page.waitForTimeout(100);
 
-    // champion-button のリストを取得
-    let buttons = await page.$$('.champion-button'); // $$ で複数要素を取得
+    for (const opponent of opponents) {
+      let myChamps = Object.keys(reasonJsonData[opponent]['beats']);
+      myChamps = myChamps.concat(Object.keys(reasonJsonData[opponent]['loses']));
+      for (const myChamp of myChamps) {
+        console.log(role, opponent, myChamp);
 
-    console.log(`見つかったボタン数: ${buttons.length}`);
-
-    // for文で順番にクリック
-    let i = 0
-    while (i < buttons.length) {
-        buttons = await page.$$('.champion-button'); // $$ で複数要素を取得
-        console.log(`クリック: ${i + 1}番目`);
-        // await buttons[i].click();
-        const d = {'top': ['グラガス', 'ワーウィック', 'ティーモ', 'ヤスオ', 
-                           'ドクター・ムンド', 'オーン', 'グウェン', 
-                            'ガングプランク'],
-                   'mid': ['カサディン', 'ナフィーリ', 
-                           'アカリ',  'オレリオン・ソル', 'リサンドラ',
-                           'アジール', 'ジグス',
-                           'ライズ', 'メル', 'スモルダー'],
-                    'jg': ['ノーチラス', 'リリア'
-                    ]}
-        await page.locator('button:has(img[alt="'+d[role][i]+'"])').click();
-        
-        // startButton が出るのを待つ
-        await page.waitForSelector('.startButton', { timeout: 5000 });
-
-        // startButton をクリック
-        await page.click('.startButton');
-
-        // 少し待機（UI更新のため）
-        await page.waitForTimeout(1000);
-
-        while (true) {
-            // champion のリストを取得
-            const champs = await page.$$('.champion');
-
-            if (champs.length >= 2) {
-                const [download] = await Promise.all([
-                    page.waitForEvent('download'), // ダウンロード発生を待つ
-                    champs[1].click() // 2個目をクリック
-                ]);
-                console.log(`champion の2個目をクリックしました`);
-
-                // 推奨ファイル名を取得して保存先を作る
-                const suggested = download.suggestedFilename(); // サーバが送った名前
-                const savePath = path.join(downloadDir, `${suggested}`);
-
-                await download.saveAs(savePath); // 任意のパスで保存
-                console.log('Saved to', savePath);
-
-            } else {
-                console.log(`champion が2個以上見つかりませんでした`);
-                break; // ループを抜ける
-            }
-
-            await page.waitForTimeout(1000); // 0.5秒待つ（挙動確認用）
-            await page.click('button#next-button');
-            await page.waitForTimeout(500); // 0.5秒待つ（挙動確認用）
-            
+        // ファイル存在確認
+        const checkPath = path.join(downloadDir, `explanation_${role}_${opponent}_vs_${myChamp}.html`);
+        if (fs.existsSync(checkPath)) {
+          console.log("Skip (already exists):", checkPath);
+          continue; // ダウンロード処理をスキップ
         }
 
-        // 「再挑戦」というテキストのボタンをクリック
-        await page.getByText('再挑戦').click();
-        console.log(`「再挑戦」ボタンをクリックしました`);
+        // 以下繰り返し
+        await page.getByLabel('Role:').fill(role);
+        await page.getByLabel('Champion 1:').fill(opponent);
+        await page.getByLabel('Champion 2:').fill(myChamp);
         
-        await page.waitForTimeout(500); // 0.5秒待つ（挙動確認用）
+        await page.waitForSelector('button.update-explain');
+        await     page.click('button.update-explain');
+        await page.waitForTimeout(1000);
+        let downloadPromise = page.waitForEvent('download'); // ダウンロード発生を待つ
+        await     page.click('button.update-explain');
+        let download = await downloadPromise;
 
-        i++;
+        // 推奨ファイル名を取得して保存先を作る
+        const suggested = download.suggestedFilename(); // サーバが送った名前
+        const savePath = path.join(downloadDir, `${suggested}`);
+
+        await download.saveAs(savePath); // 任意のパスで保存
+        console.log('Saved to', savePath);
+
+        await page.waitForTimeout(500);
+      }
     }
-}
+  }
   
-
-  // 例: テキスト入力
-  // await page.fill('input[name="username"]', 'testuser');
-
   await page.screenshot({ path: 'screenshot.png' });
 
   await browser.close();
