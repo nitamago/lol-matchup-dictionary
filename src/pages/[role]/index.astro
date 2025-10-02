@@ -99,6 +99,14 @@ const { role, champions, data, enMap } = Astro.props;
             html += `</div>`;
 
             html += `<div class="lg:min-h-[20vh] lg:overflow-scroll bg-gray-100 p-4 border rounded">`;
+            html += `<h3>互角なチャンピオン</h3><ul>`;
+            champData.even_list.forEach(e => {
+              html += `<li><a href="/lol-matchup-dictionary/${role}/${champData.name}/${e.name}" class="text-blue-600 hover:underline">${e.name}</a> (勝率: ${(50-e.delta2).toFixed(1)}%)</li>`;
+            });
+            html += `</ul>`;
+            html += `</div>`;
+
+            html += `<div class="lg:min-h-[20vh] lg:overflow-scroll bg-gray-100 p-4 border rounded">`;
             html += `<h3>不利なチャンピオン</h3><ul>`;
             champData.beats.forEach(b => {
               html += `<li><a href="/lol-matchup-dictionary/${role}/${champData.name}/${b.name}" class="text-blue-600 hover:underline">${b.name}</a> (勝率: ${(50-b.delta2).toFixed(1)}%)</li>`;
