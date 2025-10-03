@@ -82,7 +82,8 @@ const ga4TrackingCode = `
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-BSBMFV37ZG', {event_name: 'detail', 'anonymize_ip': true});
+  gtag('config', 'G-BSBMFV37ZG');
+  window.gtag("event", "detail");
 </script>
 `;
 ---
