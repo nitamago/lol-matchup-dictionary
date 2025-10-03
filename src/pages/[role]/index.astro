@@ -8,6 +8,9 @@ export async function getStaticPaths() {
   const filePath = `./src/data/name_to_ja_map.json`;
   const to_ja_map = JSON.parse(fs.readFileSync(filePath, "utf-8"));
   const to_en_map = Object.fromEntries(Object.entries(to_ja_map).map(([k, v]) => [v, k]));
+  
+  const imgFilePath = `./src/data/champions.json`;
+  const to_img_map = JSON.parse(fs.readFileSync(imgFilePath, "utf-8"));
 
   const roles: string[] = ["top", "mid", "jg", "bot", "sup"];
   const matchupsByRole: Record<string, any> = {};
@@ -34,11 +37,11 @@ export async function getStaticPaths() {
 
   return roles.map((role) => ({
     params: { role },
-    props: { role, champions: matchupsKeysByRole[role], data: dataByRole[role], enMap: to_en_map} // role に対応する配列を渡す
+    props: { role, champions: matchupsKeysByRole[role], data: dataByRole[role], enMap: to_en_map, imgMap: to_img_map} // role に対応する配列を渡す
   }));
 }
 
-const { role, champions, data, enMap } = Astro.props;
+const { role, champions, data, enMap, imgMap } = Astro.props;
 
 ---
 <html lang="ja">
@@ -125,14 +128,32 @@ const { role, champions, data, enMap } = Astro.props;
     <div class="w-full h-[30vh] lg:w-1/2 lg:h-[100vh]">
       <!-- <h1>{role} ロールのチャンピオン</h1> -->
       <h1>対面チャンピオン一覧</h1>
-      <ul id="champion-list" class="h-[90%] overflow-scroll bg-gray-100 p-4 border rounded">
+      <ul id="champion-list" class="flex flex-wrap justify-center items-center gap-x-[14px] gap-y-[24px] h-[90%] overflow-scroll bg-gray-100 p-4 text-base border rounded">
         {champions.slice() // 元配列を壊さないようコピー
                   .sort((a, b) => a.localeCompare(b, "ja")) // 日本語に対応した昇順ソート
-                  .map(c => (
-                            <li>
-                              <a href="#" data-champ={c} class="text-blue-600 hover:underline">{c}</a>
-                            </li>
-        ))}
+                  .map(c => {
+                    if (!(c in imgMap)) {
+                      return (
+                        <li>
+                          <a href="#" data-champ={c} class="text-blue-600 hover:underline">
+                            {c}
+                          </a>
+                        </li> 
+                      );
+                    } else {
+                      return (
+                        <li>
+                          <a href="#" data-champ={c} class="text-blue-600 w-[46px] h-[46px] block hover:underline">
+                            <img
+                              src={imgMap[c]['icon']}
+                              alt={c}
+                              class="object-contain hover:scale-110 transition"
+                            />
+                            {c}
+                          </a>
+                        </li>
+                    );}
+        })}
       </ul>
     </div>
 
