@@ -74,19 +74,23 @@ try {
 } catch (err) {
   console.warn("HTMLが見つかりません:", err);
 }
+
+const ga4TrackingCode = `
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BSBMFV37ZG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BSBMFV37ZG', {event_name: 'detail', 'anonymize_ip': true});
+</script>
+`;
 ---
 <html>
   <head>
     <meta charset="UTF-8" />
 		<!-- Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BSBMFV37ZG"></script>
-		<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-
-		// IP 匿名化を有効化
-    gtag('config', 'G-BSBMFV37ZG', {event_name: 'detail', 'anonymize_ip': true});
+    <Fragment set:html={ga4TrackingCode} />
 		</script>
   </head>
   <body>
