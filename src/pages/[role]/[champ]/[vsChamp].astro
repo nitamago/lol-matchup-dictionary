@@ -85,7 +85,8 @@ try {
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
 
-		gtag('config', 'G-BSBMFV37ZG');
+		// IP 匿名化を有効化
+    gtag('config', 'G-BSBMFV37ZG', {event_name: 'detail', 'anonymize_ip': true});
 		</script>
   </head>
   <body>
