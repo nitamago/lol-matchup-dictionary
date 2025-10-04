@@ -42,7 +42,27 @@ export async function getStaticPaths() {
           const url = runeBuildData[champ][vsChamp];
           const champ1 = url.split("/lol/")[1].split("/vs/")[0];
           const champ2 = url.split("/lol/")[1].split("/vs/")[1].split("/")[0];
-          const inverseUrl = "https://lolalytics.com/ja/lol/"+champ2+"/vs/"+champ1+"/build/?vslane=top&patch=14";
+          let lane = "";
+          switch (role) {
+            case "top":
+              lane = "top";
+              break;
+            case "mid":
+              lane = "middle";
+              break;
+            case "jg":
+              lane = "jungle";
+              break;
+            case "bot":
+              lane = "bottom";
+              break;
+            case "sup":
+              lane = "support";
+              break;
+            default:
+              console.log(`Sorry, we are out of ${role}.`);
+          }
+          const inverseUrl = "https://lolalytics.com/ja/lol/"+champ2+"/vs/"+champ1+"/build/?vslane="+lane+"&patch=14";
           completed[vsChamp][champ] = inverseUrl;
         }
       }
