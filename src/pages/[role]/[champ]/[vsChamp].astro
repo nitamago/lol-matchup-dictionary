@@ -12,13 +12,46 @@ export async function getStaticPaths() {
   const paths = [];
 
   for (const role of roles) {
+    let data;
+    let championKeys: string[] = [];
     try {
       const filePath = `./src/data/${role}_matchups.json`;
-      const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
       // console.log(data);
-      const championKeys: string[] = Object.keys(data);
-      // console.log(championKeys);
-      matchupsKeysByRole[role] = championKeys;
+      championKeys = Object.keys(data);
+
+    } catch (err) {
+      console.warn(`${role}_matchups.json が読み込めません:`, err);
+    }
+    let runeBuildData: Record<string, any> = {};
+    try {
+      const runeBuildFilePath = `./src/data/${role}_rune_build.json`;
+      runeBuildData = JSON.parse(fs.readFileSync(runeBuildFilePath, "utf-8"));
+
+      // 相手チャンプ⇔自チャンプのURLも登録する
+      const completed: Record<string, any> = {};
+      for (const champ of Object.keys(runeBuildData)) {
+        if (!(champ in completed)) {
+          completed[champ] = {};
+        }
+        for (const vsChamp of Object.keys(runeBuildData[champ])) {
+          completed[champ][vsChamp] = runeBuildData[champ][vsChamp];
+          if (!(vsChamp in completed)) {
+            completed[vsChamp] = {};
+          }
+          const url = runeBuildData[champ][vsChamp];
+          const champ1 = url.split("/lol/")[1].split("/vs/")[0];
+          const champ2 = url.split("/lol/")[1].split("/vs/")[1].split("/")[0];
+          const inverseUrl = "https://lolalytics.com/ja/lol/"+champ2+"/vs/"+champ1+"/build/?vslane=top&patch=14";
+          completed[vsChamp][champ] = inverseUrl;
+        }
+      }
+      runeBuildData = completed;
+
+    } catch (err) {
+      runeBuildData = {};
+      console.warn(`${role}_rune_build.json が読み込めません:`, err);
+    }
 
       for (const champkey of championKeys) { 
         data[champkey] = data[champkey] || {};
@@ -26,31 +59,46 @@ export async function getStaticPaths() {
         const advantage = data[champkey]["loses"] || []
         if (advantage) {
           for (const vs of advantage) {
+              let runeBuildUrl = "https://lolalytics.com/ja/";
+              if ((vs.name in runeBuildData)&&(champkey in runeBuildData[vs.name])) {
+                runeBuildUrl = runeBuildData[vs.name][champkey];
+              }
               // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });
-              paths.push({ params: { role, champ: champkey, vsChamp: vs.name} });
+              paths.push({ params: { role, champ: champkey, vsChamp: vs.name},
+                           props: { runeBuildUrl } });
           }
         }
         // 不利な相手
         const disadvantage = data[champkey]["beats"] || []
         if (disadvantage) {
           for (const vs of disadvantage) {
-            // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });
-            paths.push({ params: { role, champ: champkey, vsChamp: vs.name } });
+              let runeBuildUrl = "https://lolalytics.com/ja/";
+              if ((vs.name in runeBuildData)&&(champkey in runeBuildData[vs.name])) {
+                runeBuildUrl = runeBuildData[vs.name][champkey];
+              }
+              console.log(vs.name, champkey);
+              console.log(runeBuildUrl);
+              // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });
+              paths.push({ params: { role, champ: champkey, vsChamp: vs.name},
+                          props: { runeBuildUrl } });
           }
         }
         // 互角な相手
         const even = data[champkey]["even_list"] || []
         if (even) {
           for (const vs of even) {
-            // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });
-            paths.push({ params: { role, champ: champkey, vsChamp: vs.name } });
+              let runeBuildUrl = "https://lolalytics.com/ja/";
+              if ((vs.name in runeBuildData)&&(champkey in runeBuildData[vs.name])) {
+                runeBuildUrl = runeBuildData[vs.name][champkey];
+              }
+              console.log(vs.name, champkey);
+              console.log(runeBuildUrl);
+              // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });
+              paths.push({ params: { role, champ: champkey, vsChamp: vs.name},
+                          props: { runeBuildUrl } });
           }
         }
       }
-    } catch (err) {
-      matchupsKeysByRole[role] = [];
-      console.warn(`${role}_matchups.json が読み込めません:`, err);
-    }
   }
 
   return paths;
@@ -60,6 +108,7 @@ export async function getStaticPaths() {
 
 
 const { role, champ, vsChamp } = Astro.params;
+const { runeBuildUrl } = Astro.props;
 
 // URLデコード
 const champDecode = decodeURIComponent(champ);
@@ -95,7 +144,17 @@ const ga4TrackingCode = `
 		</script>
   </head>
   <body>
-    {content === "<p>解説が見つかりません</p>" ? <h2>{champDecode} vs {vsChampDecode}</h2> : ""}
-    <div set:html={content}></div>
+    <div class="flex flex-wrap">
+      {content === "<p>解説が見つかりません</p>" ? <h2>{champDecode} vs {vsChampDecode}</h2> : ""}
+      <div set:html={content}></div>
+      <div>
+        <h2>ルーン&ビルド</h2>
+        {runeBuildUrl ? (
+          <p>こちらの<a href={runeBuildUrl} target="_blank" rel="noopener noreferrer">リンク</a>を参考にしてください。</p>
+        ) : (
+          <p>リンクなし</p>
+        )}
+      </div>
+    </div>
   </body>
 </html>

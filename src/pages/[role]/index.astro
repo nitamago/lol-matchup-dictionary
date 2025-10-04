@@ -17,6 +17,8 @@ export async function getStaticPaths() {
   const matchupsKeysByRole: Record<string, any> = {};
   const dataByRole: Record<string, any> = {};
 
+  const runeBuildData: Record<string, any> = {};
+
   for (const role of roles) {
     try {
       const filePath = `./src/data/${role}_matchups.json`;
@@ -33,15 +35,22 @@ export async function getStaticPaths() {
       dataByRole[role] = [];
       console.warn(`${role}_matchups.json が読み込めません:`, err);
     }
+    try {
+      const runeBuildFilePath = `./src/data/${role}_rune_build.json`;
+      runeBuildData[role] = JSON.parse(fs.readFileSync(runeBuildFilePath, "utf-8"));
+    } catch (err) {
+      runeBuildData[role] = {};
+      console.warn(`${role}_rune_build.json が読み込めません:`, err);
+    }
   }
 
   return roles.map((role) => ({
     params: { role },
-    props: { role, champions: matchupsKeysByRole[role], data: dataByRole[role], enMap: to_en_map, imgMap: to_img_map} // role に対応する配列を渡す
+    props: { role, champions: matchupsKeysByRole[role], data: dataByRole[role], enMap: to_en_map, imgMap: to_img_map, runeBuildMap: runeBuildData[role]} // role に対応する配列を渡す
   }));
 }
 
-const { role, champions, data, enMap, imgMap } = Astro.props;
+const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
 
 ---
 <html lang="ja">
@@ -68,6 +77,8 @@ const { role, champions, data, enMap, imgMap } = Astro.props;
         const role = document.getElementById("role").textContent.trim();
         const imgMapDiv = document.getElementById("img-map");
         const imgMap = JSON.parse(imgMapDiv.textContent);
+        const runeBuildMapDiv = document.getElementById("rune-build-map");
+        const runeBuildMap = JSON.parse(runeBuildMapDiv.textContent);
 
         const links = document.querySelectorAll("#champion-list a");
 
@@ -112,6 +123,8 @@ const { role, champions, data, enMap, imgMap } = Astro.props;
                   </thead>
                   <tbody>`;
               data.forEach((d) => {
+                const runeBuildUrl = runeBuildMap?.[d.name]?.[champData.name];
+
                 table += `<tr>
                   <td class="flex flex-row border p-[3px]">
                     <img
@@ -202,6 +215,10 @@ const { role, champions, data, enMap, imgMap } = Astro.props;
     <!-- 埋め込みデータ -->
     <div id="img-map" class="hidden">
       {JSON.stringify(imgMap)}
+    </div>
+    <!-- 埋め込みデータ -->
+    <div id="rune-build-map" class="hidden">
+      {JSON.stringify(runeBuildMap)}
     </div>
   </body>
 </html>
