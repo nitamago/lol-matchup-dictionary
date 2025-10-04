@@ -66,6 +66,8 @@ const { role, champions, data, enMap, imgMap } = Astro.props;
         const enMapDiv = document.getElementById("role-en-map");
         const enMap = JSON.parse(enMapDiv.textContent);
         const role = document.getElementById("role").textContent.trim();
+        const imgMapDiv = document.getElementById("img-map");
+        const imgMap = JSON.parse(imgMapDiv.textContent);
 
         const links = document.querySelectorAll("#champion-list a");
 
@@ -82,9 +84,13 @@ const { role, champions, data, enMap, imgMap } = Astro.props;
 
             // 詳細リスト生成（右側）
             let html = `<h2>${champData.name}</h2>`;
-            const formatter = new Intl.NumberFormat('ja-JP');
+            const formatter = new Intl.NumberFormat("ja-JP");
             html += `<h3>ゲーム数: ${formatter.format(champData.game_count)}</h3>`;
-            html += `${champData.game_count < 14000 ? '<p class="text-red-700">※データ数が少ないため、参考程度にしてください</p>' : ''}`;
+            html += `${
+              champData.game_count < 14000
+                ? '<p class="text-red-700">※データ数が少ないため、参考程度にしてください</p>'
+                : ""
+            }`;
 
             html += `<p class="block lg:hidden mb-4 text-gray-700">
               ※下のチャンピオン名をクリックすると、詳細な解説ページが表示されます
@@ -93,31 +99,45 @@ const { role, champions, data, enMap, imgMap } = Astro.props;
               ※右のチャンピオン名をクリックすると、詳細な解説ページが表示されます
             </p>`;
 
-            html += `<div class="lg:min-h-[20vh] lg:overflow-scroll bg-gray-100 p-4 border rounded">`;
-            html += `<h3>有利なチャンピオン(カウンター)</h3><ul>`;
-            champData.loses.forEach(l => {
-              html += `<li><a href="/lol-matchup-dictionary/${role}/${champData.name}/${l.name}" class="text-blue-600 hover:underline">${l.name}</a> (勝率: ${(50-l.delta2).toFixed(1)}%)</li>`;
-            });
-            html += `</ul>`;
-            html += `</div>`;
+            // 共通のテーブル生成関数
+            function buildTable(title, data, color) {
+              let table = `<div class="mb-6">
+                <h3 class="font-bold mb-2">${title}</h3>
+                <table class="w-full border border-collapse bg-gray-50">
+                  <thead>
+                    <tr class="${color}">
+                      <th align="left" class="border">チャンピオン</th>
+                      <th align="left" class="border">勝率</th>
+                    </tr>
+                  </thead>
+                  <tbody>`;
+              data.forEach((d) => {
+                table += `<tr>
+                  <td class="flex flex-row border p-[3px]">
+                    <img
+                      src=${imgMap[d.name]['icon']}
+                      alt=${d.name}
+                      class="w-[32px] h-[32px] block object-contain hover:scale-110 transition"
+                    />
+                    <a href="/lol-matchup-dictionary/${role}/${champData.name}/${d.name}" 
+                      class="block text-blue-600 hover:underline">${d.name}
+                    </a>
+                  </td>
+                  <td class="border text-xs ">${(50 - d.delta2).toFixed(1)}%</td>
+                </tr>`;
+              });
+              table += `</tbody></table></div>`;
+              return table;
+            }
 
-            html += `<div class="lg:min-h-[20vh] lg:overflow-scroll bg-gray-100 p-4 border rounded">`;
-            html += `<h3>互角なチャンピオン</h3><ul>`;
-            champData.even_list.forEach(e => {
-              html += `<li><a href="/lol-matchup-dictionary/${role}/${champData.name}/${e.name}" class="text-blue-600 hover:underline">${e.name}</a> (勝率: ${(50-e.delta2).toFixed(1)}%)</li>`;
-            });
-            html += `</ul>`;
-            html += `</div>`;
-
-            html += `<div class="lg:min-h-[20vh] lg:overflow-scroll bg-gray-100 p-4 border rounded">`;
-            html += `<h3>不利なチャンピオン</h3><ul>`;
-            champData.beats.forEach(b => {
-              html += `<li><a href="/lol-matchup-dictionary/${role}/${champData.name}/${b.name}" class="text-blue-600 hover:underline">${b.name}</a> (勝率: ${(50-b.delta2).toFixed(1)}%)</li>`;
-            });
-            html += `</ul>`;
-            html += `</div>`;
+            // 3つのテーブルを追加
+            html += buildTable("有利なチャンピオン (カウンター)", champData.loses, "bg-green-200");
+            html += buildTable("互角なチャンピオン", champData.even_list, "bg-yellow-200");
+            html += buildTable("不利なチャンピオン", champData.beats, "bg-red-200");
 
             detailDiv.innerHTML = html;
+
+
           });
         });
       });
@@ -178,6 +198,10 @@ const { role, champions, data, enMap, imgMap } = Astro.props;
     <!-- 埋め込みデータ -->
     <div id="role-en-map" class="hidden">
       {JSON.stringify(enMap)}
+    </div>
+    <!-- 埋め込みデータ -->
+    <div id="img-map" class="hidden">
+      {JSON.stringify(imgMap)}
     </div>
   </body>
 </html>
