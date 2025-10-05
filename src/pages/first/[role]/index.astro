@@ -22,7 +22,43 @@ export async function getStaticPaths() {
   for (const role of roles) {
     try {
       const filePath = `./src/data/${role}_matchups.json`;
-      const data: Record<string, any> = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      const rawData: Record<string, any> = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      const data: Record<string, any> = {};
+
+      // 後出しデータから先出データを生成
+      for (const oppenent of Object.keys(rawData)) {
+        for (const beat of rawData[oppenent]["beats"]) {
+          if (!(beat.name in data)) {
+            data[beat.name] = {name: beat.name, game_count:0, loses:[], beats:[], even_list:[]};
+          }
+          data[beat.name]['loses'].push({
+            name: oppenent,
+            delta2: beat.delta2
+          });
+        }
+        for (const lose of rawData[oppenent]["loses"]) {
+          if (!(lose.name in data)) {
+            data[lose.name] = {name: lose.name, game_count:0, loses:[], beats:[], even_list:[]};
+          }
+          data[lose.name]['beats'].push({
+            name: oppenent,
+            delta2: lose.delta2
+          });
+        }
+        for (const even of rawData[oppenent]["even_list"]) {
+          if (!(even.name in data)) {
+            data[even.name] = {name: even.name, game_count:0, loses:[], beats:[], even_list:[]};
+          }
+          data[even.name]['even_list'].push({
+            name: oppenent,
+            delta2: even.delta2
+          });
+        }
+        if (!(oppenent in data)) {
+          data[oppenent] = {name: oppenent, game_count:0, loses:[], beats:[], even_list:[]};
+        }
+        data[oppenent]['game_count'] = rawData[oppenent]['game_count'];
+      }
 
       dataByRole[role] = data;
       const championKeys = Object.keys(data)
@@ -137,7 +173,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
                       class="block text-blue-600 hover:underline">${d.name}
                     </a>
                   </td>
-                  <td class="border text-xs ">${(50 + parseFloat(d.delta2)).toFixed(1)}%</td>
+                  <td class="border text-xs ">${(50 - parseFloat(d.delta2)).toFixed(1)}%</td>
                 </tr>`;
               });
               table += `</tbody></table></div>`;
