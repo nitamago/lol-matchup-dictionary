@@ -27,6 +27,9 @@ export async function getStaticPaths() {
 
       // 後出しデータから先出データを生成
       for (const oppenent of Object.keys(rawData)) {
+        if (rawData[oppenent]["game_count"] < 14000) {
+          continue;
+        }
         for (const beat of rawData[oppenent]["beats"]) {
           if (!(beat.name in data)) {
             data[beat.name] = {name: beat.name, game_count:0, loses:[], beats:[], even_list:[]};
