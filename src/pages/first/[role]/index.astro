@@ -59,6 +59,11 @@ export async function getStaticPaths() {
         }
         data[oppenent]['game_count'] = rawData[oppenent]['game_count'];
       }
+      for (const champ of Object.keys(data)) {
+        if ((data[champ]['loses'].length == 0)||(data[champ]['beats'].length == 0)||(data[champ]['even_list'].length == 0)) {
+          delete data[champ];
+        }
+      }
 
       dataByRole[role] = data;
       const championKeys = Object.keys(data)
