@@ -245,7 +245,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
                             .map((x) => 50 + parseFloat(x.delta2))
                             .filter((v) => !isNaN(v)); // NaNを除外
                           if (values.length === 0) return '???';
-                          return Math.min(...values).toFixed(1);
+                          return Math.min(...values).toFixed(1)+'%';
                         })()
                       : '???'}
                     {/* {info.winRate ? `${info.winRate.toFixed(1)}%` : '-'} */}
