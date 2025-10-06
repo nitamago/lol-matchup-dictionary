@@ -251,7 +251,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
                     {/* {info.winRate ? `${info.winRate.toFixed(1)}%` : '-'} */}
                   </td>
                   <td class="border p-2 text-center">
-                    {data[c]['beats'] ? data[c]['beats'].length : '???'}
+                    {data[c]['beats'] ? data[c]['loses'].length : '???'}
                     {/* {info.pickRate ? `${info.pickRate.toFixed(1)}%` : '-'} */}
                   </td>
                 </tr>
