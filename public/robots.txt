@@ -1,0 +1,7 @@
+User-agent: Googlebot
+Disallow: /nogooglebot/
+
+User-agent: *
+Allow: /
+
+Sitemap: https://nitamago.github.io/lol-matchup-dictionary/sitemap-index.xml
