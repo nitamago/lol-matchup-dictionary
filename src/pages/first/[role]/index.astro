@@ -1,4 +1,5 @@
 ---
+import { date } from "astro:schema";
 import "../../../styles/global.css";
 import fs from "fs";
 import path from "path";
@@ -235,6 +236,13 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               data.forEach((d) => {
                 const runeBuildUrl = runeBuildMap?.[d.name]?.[champData.name];
 
+                let win_rate = '';
+                if (d.delta2.includes('*')){
+                  win_rate = (50 - parseFloat(d.delta2.replace('*', ''))).toFixed(1)+'%*';
+                } else {
+                  win_rate = (50 - parseFloat(d.delta2)).toFixed(1)+'%';
+                }
+                 
                 table += `<tr>
                   <td class="flex flex-row border p-[3px]">
                     <img
@@ -246,7 +254,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                       class="block text-blue-600 hover:underline">${d.name}
                     </a>
                   </td>
-                  <td class="border text-xs ">${(50 - parseFloat(d.delta2)).toFixed(1)}%</td>
+                  <td class="border text-xs ">${win_rate}
+                  </td>
                 </tr>`;
               });
               table += `</tbody></table></div>`;
@@ -679,11 +688,20 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                     {console.log(data[c]['beats'])}
                     {(data[c]?.beats?.length > 0) ? (() => {
                           const values = data[c].beats
-                            .map((x) => 50 + parseFloat(x.delta2))
-                            .filter((v) => !isNaN(v)); // NaNを除外
+                            .map((x) => {return {delta2: parseFloat(x.delta2.replace('*','')), anotate: x.delta2.includes('*')}})
+                            .filter((v) => {return !isNaN(v.delta2)}); // NaNを除外
                           if (values.length === 0) return '???';
-                          return Math.min(...values).toFixed(1)+'%';
-                        })()
+                          const minItem = values.reduce((min, item) =>
+                            item.delta2 < min.delta2 ? item : min
+                          );
+
+                          if (minItem.anotate) {
+                            return (50+minItem.delta2).toFixed(1)+'%';
+                          }
+                          else {
+                            return (50+minItem.delta2).toFixed(1)+'%*';
+                          }
+                        })
                       : '???'}
                     {/* {info.winRate ? `${info.winRate.toFixed(1)}%` : '-'} */}
                   </td>
