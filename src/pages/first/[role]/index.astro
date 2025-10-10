@@ -26,51 +26,7 @@ export async function getStaticPaths() {
   for (const role of roles) {
     try {
       const filePath = `./src/data/${role}_matchups.json`;
-      const rawData: Record<string, any> = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-      const data: Record<string, any> = {};
-
-      // 後出しデータから先出データを生成
-      for (const oppenent of Object.keys(rawData)) {
-        if (rawData[oppenent]["game_count"] < 14000) {
-          continue;
-        }
-        for (const beat of rawData[oppenent]["beats"]) {
-          if (!(beat.name in data)) {
-            data[beat.name] = {name: beat.name, game_count:0, loses:[], beats:[], even_list:[]};
-          }
-          data[beat.name]['loses'].push({
-            name: oppenent,
-            delta2: beat.delta2
-          });
-        }
-        for (const lose of rawData[oppenent]["loses"]) {
-          if (!(lose.name in data)) {
-            data[lose.name] = {name: lose.name, game_count:0, loses:[], beats:[], even_list:[]};
-          }
-          data[lose.name]['beats'].push({
-            name: oppenent,
-            delta2: lose.delta2
-          });
-        }
-        for (const even of rawData[oppenent]["even_list"]) {
-          if (!(even.name in data)) {
-            data[even.name] = {name: even.name, game_count:0, loses:[], beats:[], even_list:[]};
-          }
-          data[even.name]['even_list'].push({
-            name: oppenent,
-            delta2: even.delta2
-          });
-        }
-        if (!(oppenent in data)) {
-          data[oppenent] = {name: oppenent, game_count:0, loses:[], beats:[], even_list:[]};
-        }
-        data[oppenent]['game_count'] = rawData[oppenent]['game_count'];
-      }
-      for (const champ of Object.keys(data)) {
-        if ((data[champ]['loses'].length == 0)||(data[champ]['beats'].length == 0)||(data[champ]['even_list'].length == 0)) {
-          delete data[champ];
-        }
-      }
+      const data: Record<string, any> = JSON.parse(fs.readFileSync(filePath, "utf-8"));
 
       dataByRole[role] = data;
       const championKeys = Object.keys(data)
@@ -238,9 +194,9 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
 
                 let win_rate = '';
                 if (d.delta2.includes('*')){
-                  win_rate = (50 - parseFloat(d.delta2.replace('*', ''))).toFixed(1)+'%*';
+                  win_rate = (50 + parseFloat(d.delta2.replace('*', ''))).toFixed(1)+'%*';
                 } else {
-                  win_rate = (50 - parseFloat(d.delta2)).toFixed(1)+'%';
+                  win_rate = (50 + parseFloat(d.delta2)).toFixed(1)+'%';
                 }
                  
                 table += `<tr>
@@ -330,7 +286,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
           // 各行を走査（0行目はヘッダーなので除外）
           for (let i = 1; i < table.rows.length; i++) {
             const nameCell = table.rows[i].cells[0]; // 名前セル
-            const scoreCell = table.rows[i].cells[3]; // スコアセル
+            const scoreCell = table.rows[i].cells[2]; // スコアセル
             const champName = nameCell.textContent.trim();
 
             if (champName in scoreData) {
@@ -658,13 +614,13 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
           <tr>
             <th class="border p-2 text-left cursor-pointer">チャンピオン</th>
             <th class="border p-2 text-center cursor-pointer">最悪勝率</th>
-            <th class="border p-2 text-center cursor-pointer">カウンター数</th>
             <th class="border p-2 text-center cursor-pointer">シナジー</th>
           </tr>
         </thead>
         <tbody id="champion-list">
           {champions
             .slice()
+            .filter((a)=>data[a]['game_count']>=14000)
             .sort((a, b) => a.localeCompare(b, "ja"))
             .map((c) => {
               const info = data[c] || {}; // ← 各チャンピオンの追加データをここで参照
@@ -686,28 +642,25 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                   </td>
                   <td class="border p-2 text-center">
                     {console.log(data[c]['beats'])}
-                    {(data[c]?.beats?.length > 0) ? (() => {
-                          const values = data[c].beats
+                    {(data[c]?.loses?.length > 0) ? (() => {
+                          const values = data[c].loses
                             .map((x) => {return {delta2: parseFloat(x.delta2.replace('*','')), anotate: x.delta2.includes('*')}})
-                            .filter((v) => {return !isNaN(v.delta2)}); // NaNを除外
+                            .filter((v) => {return !isNaN(v.delta2)}) // NaNを除外
+                            .filter((v) => {return !v.anotate}); // 少数データを除外
                           if (values.length === 0) return '???';
                           const minItem = values.reduce((min, item) =>
                             item.delta2 < min.delta2 ? item : min
                           );
 
                           if (minItem.anotate) {
-                            return (50+minItem.delta2).toFixed(1)+'%';
+                            return (50+minItem.delta2).toFixed(1)+'%*';
                           }
                           else {
-                            return (50+minItem.delta2).toFixed(1)+'%*';
+                            return (50+minItem.delta2).toFixed(1)+'%';
                           }
                         })
                       : '???'}
                     {/* {info.winRate ? `${info.winRate.toFixed(1)}%` : '-'} */}
-                  </td>
-                  <td class="border p-2 text-center">
-                    {data[c]['beats'] ? data[c]['loses'].length : '???'}
-                    {/* {info.pickRate ? `${info.pickRate.toFixed(1)}%` : '-'} */}
                   </td>
                   <td id={"synergy-"+c} class="border p-2 text-center">
                     0
