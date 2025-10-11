@@ -111,7 +111,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
             </p>`;
 
             // 共通のテーブル生成関数
-            function buildTable(title, data, color) {
+            function buildTable(title, data, color, game_count) {
               let table = `<div class="mb-6">
                 <h3 class="font-bold mb-2">${title}</h3>
                 <table class="w-full border border-collapse bg-gray-50">
@@ -122,11 +122,15 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
                     </tr>
                   </thead>
                   <tbody>`;
+              
               data.forEach((d) => {
                 const runeBuildUrl = runeBuildMap?.[d.name]?.[champData.name];
 
                 let win_rate = "?"
                 if (d.delta2.includes('*')){
+                  if (game_count>=14000) {
+                    return;
+                  }
                   win_rate = (50 - parseFloat(d.delta2.replace('*', ''))).toFixed(1)+'%*';
                 } else {
                   win_rate = (50 - parseFloat(d.delta2)).toFixed(1)+'%';
@@ -152,9 +156,9 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
             }
 
             // 3つのテーブルを追加
-            html += buildTable("有利なチャンピオン (カウンター)", champData.loses, "bg-green-200");
-            html += buildTable("互角なチャンピオン", champData.even_list, "bg-yellow-200");
-            html += buildTable("不利なチャンピオン", champData.beats, "bg-red-200");
+            html += buildTable("有利なチャンピオン (カウンター)", champData.loses, "bg-green-200", champData.game_count);
+            html += buildTable("互角なチャンピオン", champData.even_list, "bg-yellow-200", champData.game_count);
+            html += buildTable("不利なチャンピオン", champData.beats, "bg-red-200", champData.game_count);
 
             detailDiv.innerHTML = html;
 
