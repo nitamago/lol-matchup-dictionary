@@ -34,7 +34,7 @@ export async function getStaticPaths() {
         const top5 = sorted.slice(0, 5);
         // 下位5チャンプ（末尾から）
         const bottom5 = sorted.slice(-5);
-        console.log(top5);
+        
         for (const mateData of top5.concat(bottom5)) {
             const mate = mateData[0];
             // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });

@@ -85,7 +85,6 @@ export async function getStaticPaths() {
       synergyKeysByRole[role] = {'top':[], 'mid':[], 'jg':[], 'bot':[], 'sup':[]};
       console.warn(`${role}_synergy.json が読み込めません:`, err);
     }
-    console.log(synergyKeysByRole)
   }
 
   return roles.map((role) => ({
@@ -142,7 +141,6 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
       const runeBuildMap = JSON.parse(runeBuildMapDiv.textContent);
       const synergyChampionsDiv = document.getElementById("synergy-champions");
       const synergyChampions = JSON.parse(synergyChampionsDiv.textContent);
-      console.log(synergyChampions);
 
       window.addEventListener("load", () => {
         const links = document.querySelectorAll("#champion-list a");
@@ -711,7 +709,6 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                     </a>
                   </td>
                   <td class="border p-2 text-center">
-                    {console.log(data[c]['beats'])}
                     {(data[c]?.loses?.length > 0) ? (() => {
                           const values = data[c].loses
                             .map((x) => {return {delta2: parseFloat(x.delta2.replace('*','')), anotate: x.delta2.includes('*')}})
