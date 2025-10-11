@@ -96,8 +96,8 @@ export async function getStaticPaths() {
               if ((vs.name in runeBuildData)&&(champkey in runeBuildData[vs.name])) {
                 runeBuildUrl = runeBuildData[vs.name][champkey];
               }
-              console.log(vs.name, champkey);
-              console.log(runeBuildUrl);
+              // console.log(vs.name, champkey);
+              // console.log(runeBuildUrl);
               // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });
               paths.push({ params: { role, champ: champkey, vsChamp: vs.name},
                           props: { runeBuildUrl } });
@@ -111,8 +111,8 @@ export async function getStaticPaths() {
               if ((vs.name in runeBuildData)&&(champkey in runeBuildData[vs.name])) {
                 runeBuildUrl = runeBuildData[vs.name][champkey];
               }
-              console.log(vs.name, champkey);
-              console.log(runeBuildUrl);
+              // console.log(vs.name, champkey);
+              // console.log(runeBuildUrl);
               // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });
               paths.push({ params: { role, champ: champkey, vsChamp: vs.name},
                           props: { runeBuildUrl } });
@@ -121,6 +121,7 @@ export async function getStaticPaths() {
       }
   }
 
+  return [];
   return paths;
 
 
@@ -137,7 +138,7 @@ const vsChampDecode = decodeURIComponent(vsChamp);
 // // HTML ファイルを読み込む
 let content = "<p>解説が見つかりません</p>";
 try {
-  console.log(`./public/matchups/explanation_${role}_${champDecode}_vs_${vsChampDecode}.html`)
+  // console.log(`./public/matchups/explanation_${role}_${champDecode}_vs_${vsChampDecode}.html`)
   const filePath = path.resolve(`./public/matchups/explanation_${role}_${champDecode}_vs_${vsChampDecode}.html`);
   content = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
 } catch (err) {

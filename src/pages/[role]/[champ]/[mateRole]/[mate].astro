@@ -1,0 +1,93 @@
+---
+import fs from "fs";
+import path from "path";
+
+export async function getStaticPaths() {
+  const filePath = `./src/data/name_to_ja_map.json`;
+  const to_ja_map = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  const to_en_map = Object.fromEntries(Object.entries(to_ja_map).map(([k, v]) => [v, k]));
+
+  const roles = ["top", "mid", "jg", "bot", "sup"];
+  const matchupsKeysByRole: Record<string, string[]> = {};
+  const paths = [];
+
+  for (const role of roles) {
+    let data;
+    let championKeys: string[] = [];
+    try {
+      const filePath = `./src/data/${role}_synergy.json`;
+      data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      // console.log(data);
+      championKeys = Object.keys(data);
+
+    } catch (err) {
+      console.warn(`${role}_synergy.json が読み込めません:`, err);
+    }
+
+    for (const champkey of championKeys) { 
+      data[champkey] = data[champkey] || {};
+      const mateRoles = Object.keys(data[champkey]);
+      for (const mateRole of mateRoles) { 
+        const mates = Object.keys(data[champkey][mateRole]);
+        const sorted = Object.entries(data[champkey][mateRole]).sort((a, b) => b[1] - a[1]);
+        // 上位5チャンプ
+        const top5 = sorted.slice(0, 5);
+        // 下位5チャンプ（末尾から）
+        const bottom5 = sorted.slice(-5);
+        console.log(top5);
+        for (const mateData of top5.concat(bottom5)) {
+            const mate = mateData[0];
+            // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });
+            paths.push({ params: { role: role, champ: champkey, mateRole: mateRole, mate: mate}});
+        }
+      }
+    }
+  }
+
+  return paths;
+}
+
+
+const { role, champ, mateRole, mate } = Astro.params;
+
+// URLデコード
+const champDecode = decodeURIComponent(champ);
+const mateDecode = decodeURIComponent(mate);
+
+// // HTML ファイルを読み込む
+let content = "<p>解説が見つかりません</p>";
+try {
+  console.log(`./public/synergies/${role}_${champDecode}_${mateRole}_${mateDecode}_synergy_reasons.html`)
+  const filePath = path.resolve(`./public/synergies/${role}_${champDecode}_${mateRole}_${mateDecode}_synergy_reasons.html`);
+  content = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
+} catch (err) {
+  console.warn("HTMLが見つかりません:", err);
+}
+
+const ga4TrackingCode = `
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BSBMFV37ZG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'GT-KFNRBGDS');
+  gtag("event", "synergy");
+</script>
+`;
+---
+<html>
+  <head>
+    <meta charset="UTF-8" />
+		<!-- Google tag (gtag.js) -->
+    <Fragment set:html={ga4TrackingCode} />
+		</script>
+    {<title>{role}{champ} {mateRole}{mate} シナジー解説</title>}
+  </head>
+  <body>
+    <div class="flex flex-wrap">
+      {content === "<p>解説が見つかりません</p>" ? <h2>{role} {champDecode} and {mateRole} {mateDecode}</h2> : ""}
+      <div set:html={content}></div>
+    </div>
+  </body>
+</html>

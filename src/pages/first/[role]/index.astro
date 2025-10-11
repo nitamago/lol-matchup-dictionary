@@ -246,6 +246,21 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
           const synergyMapsDiv = document.getElementById("synergy-map");
           const synergyMaps = JSON.parse(synergyMapsDiv.textContent);
           const scoreData = {};
+          let synergyTopList = [];
+          let synergyMidList = [];
+          let synergyJgList = [];
+          let synergyBotList = [];
+          let synergySupList = [];
+
+          function sliceSynergy(map){
+            let result = [];
+            const sorted = Object.entries(map).sort((a, b) => b[1] - a[1]);
+            const top5 = sorted.slice(0, 5);
+            const bottom5 = sorted.slice(-5);
+            result = result.concat(top5).concat(bottom5).map((a)=>a[0]);
+            return result;
+          }
+
           for (const champ of roleDataKey){
             let total = 0;
             if(selectedTop){
@@ -253,30 +268,40 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               if (synergyMaps['top'][role][mate][champ]) {
                 total += parseFloat(synergyMaps['top'][role][mate][champ]);
               }
+              const map = synergyMaps['top'][role][mate];
+              synergyTopList = sliceSynergy(map)
             }
             if(selectedJg){
               const mate = selectedJg.dataset.value;
               if (synergyMaps['jg'][role][mate][champ]) {
                 total += parseFloat(synergyMaps['jg'][role][mate][champ]);
               }
+              const map = synergyMaps['jg'][role][mate];
+              synergyJgList = sliceSynergy(map)
             }
             if(selectedMid){
               const mate = selectedMid.dataset.value;
               if (synergyMaps['mid'][role][mate][champ]) {
                 total += parseFloat(synergyMaps['mid'][role][mate][champ]);
               }
+              const map = synergyMaps['mid'][role][mate];
+              synergyMidList = sliceSynergy(map)
             }
             if(selectedBot){
               const mate = selectedBot.dataset.value;
               if (synergyMaps['bot'][role][mate][champ]) {
                 total += parseFloat(synergyMaps['bot'][role][mate][champ]);
               }
+              const map = synergyMaps['bot'][role][mate];
+              synergyBotList = sliceSynergy(map)
             }
             if(selectedSup){
               const mate = selectedSup.dataset.value;
               if (synergyMaps['sup'][role][mate][champ]) {
                 total += parseFloat(synergyMaps['sup'][role][mate][champ]);
               }
+              const map = synergyMaps['sup'][role][mate];
+              synergySupList = sliceSynergy(map)
             }
             scoreData[champ] = total;
           }
@@ -286,13 +311,56 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
           // 各行を走査（0行目はヘッダーなので除外）
           for (let i = 1; i < table.rows.length; i++) {
             const nameCell = table.rows[i].cells[0]; // 名前セル
-            const scoreCell = table.rows[i].cells[2]; // スコアセル
             const champName = nameCell.textContent.trim();
-
+              
+            const scoreCell = table.rows[i].cells[2]; // 名前セル
             if (champName in scoreData) {
-              scoreCell.textContent = scoreData[champName].toFixed(1);
+              const score = scoreData[champName].toFixed(1);
+              const imgSrc = `/lol-matchup-dictionary/icons/ico_Ivern.jpg`; // 実際のパスに合わせて変更
+
+              let html = `
+                <div class="flex">
+                  <span>${score}</span>`
+              if (synergyTopList.includes(champName)){
+                const mate = selectedTop.dataset.value;
+                const linkUrl = `/lol-matchup-dictionary/top/${mate}/${role}/${champName}`; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" width="24" height="24" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (synergyMidList.includes(champName)){
+                const mate = selectedMid.dataset.value;
+                const linkUrl = `/lol-matchup-dictionary/mid/${mate}/${role}/${champName}`; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" width="24" height="24" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (synergyJgList.includes(champName)){
+                const mate = selectedJg.dataset.value;
+                const linkUrl = `/lol-matchup-dictionary/jg/${mate}/${role}/${champName}`; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" width="24" height="24" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (synergyBotList.includes(champName)){
+                const mate = selectedBot.dataset.value;
+                const linkUrl = `/lol-matchup-dictionary/bot/${mate}/${role}/${champName}`; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" width="24" height="24" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (synergySupList.includes(champName)){
+                const mate = selectedSup.dataset.value;
+                const linkUrl = `/lol-matchup-dictionary/sup/${mate}/${role}/${champName}`; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" width="24" height="24" style="vertical-align:middle;">
+                  </a>`
+              }
+
+              html += `</div>`;
+              scoreCell.innerHTML = html;
             } else {
-              scoreCell.textContent = "N/A"; // 該当データがない場合
+              scoreCell.textContent = "N/A";
             }
           }
         }
