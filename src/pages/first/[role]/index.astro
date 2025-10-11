@@ -410,6 +410,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
             rows.forEach(row => tbody.appendChild(row));
           });
         });
+        // チャンプ名の昇順
+        headers[0].classList.add("sort-asc");
       });
     </script>
   </head>
