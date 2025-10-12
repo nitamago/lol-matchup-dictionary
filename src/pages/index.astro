@@ -1,6 +1,6 @@
 ---
-import "./styles/global.css";
-import "./styles/role-select.css";
+import "../styles/global.css";
+import "../styles/role-select.css";
 
 const roles = [
   { name: "Top", icon: "https://nitamago.github.io/lol-matchup-dictionary/icons/top_icon.PNG", classStr: "relative block w-[150px] top-[220px] left-[50px] lg:top-[130px] lg:left-[0px]" },
@@ -55,7 +55,7 @@ const roles = [
 					<!-- ▼ 先出用 -->
       				<div class="roles roles-first">
 						{roles.map(role => (
-						<a href={`first/${role.name.toLowerCase()}`} class={role.classStr}>
+						<a href={`/first/${role.name.toLowerCase()}`} class={role.classStr}>
 						<img src={role.icon} alt={role.name} class="relative w-[150px] lg:w-[100px] rounded-[50%] hover:ring-4 hover:ring-blue-400 hover:ring-offset-2 hover:scale-105"/>
 						</a>
 						))}
@@ -64,7 +64,7 @@ const roles = [
 					<!-- ▼ 後出し用 -->
       				<div class="roles roles-counter" style="display:none;">
 						{roles.map(role => (
-							<a href={`counter/${role.name.toLowerCase()}`} class={role.classStr}>
+							<a href={`/counter/${role.name.toLowerCase()}`} class={role.classStr}>
 							<img src={role.icon} alt={role.name} class="relative w-[150px] lg:w-[100px] rounded-[50%] hover:ring-4 hover:ring-blue-400 hover:ring-offset-2 hover:scale-105"/>
 							</a>
 						))}
