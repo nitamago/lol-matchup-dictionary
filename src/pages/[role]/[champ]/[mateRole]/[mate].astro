@@ -14,34 +14,41 @@ export async function getStaticPaths() {
   for (const role of roles) {
     let data;
     let championKeys: string[] = [];
+    let files: string[] = [];
     try {
-      const filePath = `./src/data/${role}_synergy.json`;
-      data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-      // console.log(data);
-      championKeys = Object.keys(data);
-
+      const dirPath = './public/synergies'; // 読みたいディレクトリ
+      files = fs.readdirSync(dirPath);
     } catch (err) {
-      console.warn(`${role}_synergy.json が読み込めません:`, err);
+      console.warn(`./public/synergies が読み込めません:`, err);
     }
 
-    for (const champkey of championKeys) { 
-      data[champkey] = data[champkey] || {};
-      const mateRoles = Object.keys(data[champkey]);
-      for (const mateRole of mateRoles) { 
-        const mates = Object.keys(data[champkey][mateRole]);
-        const sorted = Object.entries(data[champkey][mateRole]).sort((a, b) => b[1] - a[1]);
-        // 上位5チャンプ
-        const top5 = sorted.slice(0, 5);
-        // 下位5チャンプ（末尾から）
-        const bottom5 = sorted.slice(-5);
-        
-        for (const mateData of top5.concat(bottom5)) {
-            const mate = mateData[0];
-            // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });
-            paths.push({ params: { role: role, champ: champkey, mateRole: mateRole, mate: mate}});
-        }
-      }
+    for (const file of files) {
+      const fileName = file;
+      const role = fileName.split('_')[0];
+      const champ = fileName.split('_')[1];
+      const mateRole = fileName.split('_')[2];
+      const mate = fileName.split('_')[3];
+      paths.push({ params: { role: role, champ: champ, mateRole: mateRole, mate: mate}});
     }
+
+    // for (const champkey of championKeys) { 
+    //   data[champkey] = data[champkey] || {};
+    //   const mateRoles = Object.keys(data[champkey]);
+    //   for (const mateRole of mateRoles) { 
+    //     const mates = Object.keys(data[champkey][mateRole]);
+    //     const sorted = Object.entries(data[champkey][mateRole]).sort((a, b) => parseFloat(b[1]) - parseFloat(a[1]));
+    //     // 上位5チャンプ
+    //     const top5 = sorted.slice(0, 5);
+    //     // 下位5チャンプ（末尾から）
+    //     const bottom5 = sorted.slice(-5);
+        
+    //     for (const mateData of top5.concat(bottom5)) {
+    //         const mate = mateData[0];
+    //         // paths.push({ params: { role, champ: to_en_map[champkey], vsChamp: to_en_map[vs.name] } });
+    //         paths.push({ params: { role: role, champ: champkey, mateRole: mateRole, mate: mate}});
+    //     }
+    //   }
+    // }
   }
 
   return paths;

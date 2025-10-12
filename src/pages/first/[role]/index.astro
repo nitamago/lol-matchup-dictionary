@@ -265,7 +265,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               const mate = selectedTop.dataset.value;
               if (synergyMaps['top'][role][mate][champ]) {
                 total += parseFloat(synergyMaps['top'][role][mate][champ]);
-              }
+              }     
               const map = synergyMaps['top'][role][mate];
               synergyTopList = sliceSynergy(map)
             }
