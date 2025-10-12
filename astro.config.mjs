@@ -16,6 +16,5 @@ export default defineConfig({
 
   // integrations: [sitemap()],
   // adapter: netlify(),
-  output: 'server',
-  adapter: netlify(),
+  output: 'static',
 });
