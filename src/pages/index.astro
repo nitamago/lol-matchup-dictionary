@@ -55,7 +55,7 @@ const roles = [
 					<!-- ▼ 先出用 -->
       				<div class="roles roles-first">
 						{roles.map(role => (
-						<a href={`/lol-matchup-dictionary/first/${role.name.toLowerCase()}`} class={role.classStr}>
+						<a href={`/first/${role.name.toLowerCase()}`} class={role.classStr}>
 						<img src={role.icon} alt={role.name} class="relative w-[150px] lg:w-[100px] rounded-[50%] hover:ring-4 hover:ring-blue-400 hover:ring-offset-2 hover:scale-105"/>
 						</a>
 						))}
@@ -64,7 +64,7 @@ const roles = [
 					<!-- ▼ 後出し用 -->
       				<div class="roles roles-counter" style="display:none;">
 						{roles.map(role => (
-							<a href={`/lol-matchup-dictionary/counter/${role.name.toLowerCase()}`} class={role.classStr}>
+							<a href={`/counter/${role.name.toLowerCase()}`} class={role.classStr}>
 							<img src={role.icon} alt={role.name} class="relative w-[150px] lg:w-[100px] rounded-[50%] hover:ring-4 hover:ring-blue-400 hover:ring-offset-2 hover:scale-105"/>
 							</a>
 						))}
