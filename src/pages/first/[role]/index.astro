@@ -204,7 +204,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                       alt=${d.name}
                       class="w-[32px] h-[32px] block object-contain hover:scale-110 transition"
                     />
-                    <a href="/lol-matchup-dictionary/${role}/${d.name}/${champData.name}" 
+                    <a href="${role}/${d.name}/${champData.name}" 
                       class="block text-blue-600 hover:underline">${d.name}
                     </a>
                   </td>
@@ -314,42 +314,42 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
             const scoreCell = table.rows[i].cells[2]; // 名前セル
             if (champName in scoreData) {
               const score = scoreData[champName].toFixed(1);
-              const imgSrc = `/lol-matchup-dictionary/icons/ico_Ivern.jpg`; // 実際のパスに合わせて変更
+              const imgSrc = `icons/ico_Ivern.jpg`; // 実際のパスに合わせて変更
 
               let html = `
                 <div class="flex">
                   <span>${score}</span>`
               if (synergyTopList.includes(champName)){
                 const mate = selectedTop.dataset.value;
-                const linkUrl = `/lol-matchup-dictionary/top/${mate}/${role}/${champName}`; 
+                const linkUrl = `top/${mate}/${role}/${champName}`; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
                     <img src="${imgMap[mate].icon}" alt="${mate}" width="24" height="24" style="vertical-align:middle;">
                   </a>`
               }
               if (synergyMidList.includes(champName)){
                 const mate = selectedMid.dataset.value;
-                const linkUrl = `/lol-matchup-dictionary/mid/${mate}/${role}/${champName}`; 
+                const linkUrl = `mid/${mate}/${role}/${champName}`; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
                     <img src="${imgMap[mate].icon}" alt="${mate}" width="24" height="24" style="vertical-align:middle;">
                   </a>`
               }
               if (synergyJgList.includes(champName)){
                 const mate = selectedJg.dataset.value;
-                const linkUrl = `/lol-matchup-dictionary/jg/${mate}/${role}/${champName}`; 
+                const linkUrl = `jg/${mate}/${role}/${champName}`; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
                     <img src="${imgMap[mate].icon}" alt="${mate}" width="24" height="24" style="vertical-align:middle;">
                   </a>`
               }
               if (synergyBotList.includes(champName)){
                 const mate = selectedBot.dataset.value;
-                const linkUrl = `/lol-matchup-dictionary/bot/${mate}/${role}/${champName}`; 
+                const linkUrl = `bot/${mate}/${role}/${champName}`; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
                     <img src="${imgMap[mate].icon}" alt="${mate}" width="24" height="24" style="vertical-align:middle;">
                   </a>`
               }
               if (synergySupList.includes(champName)){
                 const mate = selectedSup.dataset.value;
-                const linkUrl = `/lol-matchup-dictionary/sup/${mate}/${role}/${champName}`; 
+                const linkUrl = `sup/${mate}/${role}/${champName}`; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
                     <img src="${imgMap[mate].icon}" alt="${mate}" width="24" height="24" style="vertical-align:middle;">
                   </a>`
