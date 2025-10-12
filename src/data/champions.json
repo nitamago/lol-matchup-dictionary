@@ -1,686 +1,686 @@
 {
 	"ランブル": {
 		"name": "ランブル",
-		"icon": "/lol-matchup-dictionary/icons/ico_Rumble.jpg"
+		"icon": "/icons/ico_Rumble.jpg"
 	},
 	"フィオラ": {
 		"name": "フィオラ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Fiora.jpg"
+		"icon": "/icons/ico_Fiora.jpg"
 	},
 	"イレリア": {
 		"name": "イレリア",
-		"icon": "/lol-matchup-dictionary/icons/ico_Irelia.jpg"
+		"icon": "/icons/ico_Irelia.jpg"
 	},
 	"ジャックス": {
 		"name": "ジャックス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Jax.jpg"
+		"icon": "/icons/ico_Jax.jpg"
 	},
 	"シンジド": {
 		"name": "シンジド",
-		"icon": "/lol-matchup-dictionary/icons/ico_Singed.jpg"
+		"icon": "/icons/ico_Singed.jpg"
 	},
 	"アーゴット": {
 		"name": "アーゴット",
-		"icon": "/lol-matchup-dictionary/icons/ico_Urgot.jpg"
+		"icon": "/icons/ico_Urgot.jpg"
 	},
 	"シェン": {
 		"name": "シェン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Shen.jpg"
+		"icon": "/icons/ico_Shen.jpg"
 	},
 	"リヴェン": {
 		"name": "リヴェン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Riven.jpg"
+		"icon": "/icons/ico_Riven.jpg"
 	},
 	"ポッピー": {
 		"name": "ポッピー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Poppy.jpg"
+		"icon": "/icons/ico_Poppy.jpg"
 	},
 	"ケネン": {
 		"name": "ケネン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Kennen.jpg"
+		"icon": "/icons/ico_Kennen.jpg"
 	},
 	"セト": {
 		"name": "セト",
-		"icon": "/lol-matchup-dictionary/icons/ico_Sett.jpg"
+		"icon": "/icons/ico_Sett.jpg"
 	},
 	"クイン": {
 		"name": "クイン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Quinn.jpg"
+		"icon": "/icons/ico_Quinn.jpg"
 	},
 	"カミール": {
 		"name": "カミール",
-		"icon": "/lol-matchup-dictionary/icons/ico_Camille.jpg"
+		"icon": "/icons/ico_Camille.jpg"
 	},
 	"ケイル": {
 		"name": "ケイル",
-		"icon": "/lol-matchup-dictionary/icons/ico_Kayle.jpg"
+		"icon": "/icons/ico_Kayle.jpg"
 	},
 	"ブラッドミア": {
 		"name": "ブラッドミア",
-		"icon": "/lol-matchup-dictionary/icons/ico_Vladimir.jpg"
+		"icon": "/icons/ico_Vladimir.jpg"
 	},
 	"クレッド": {
 		"name": "クレッド",
-		"icon": "/lol-matchup-dictionary/icons/ico_Kled.jpg"
+		"icon": "/icons/ico_Kled.jpg"
 	},
 	"アンベッサ": {
 		"name": "アンベッサ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Ambessa.jpg"
+		"icon": "/icons/ico_Ambessa.jpg"
 	},
 	"オラフ": {
 		"name": "オラフ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Olaf.jpg"
+		"icon": "/icons/ico_Olaf.jpg"
 	},
 	"ザック": {
 		"name": "ザック",
-		"icon": "/lol-matchup-dictionary/icons/ico_Zac.jpg"
+		"icon": "/icons/ico_Zac.jpg"
 	},
 	"パンテオン": {
 		"name": "パンテオン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Pantheon.jpg"
+		"icon": "/icons/ico_Pantheon.jpg"
 	},
 	"サイラス": {
 		"name": "サイラス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Sylas.jpg"
+		"icon": "/icons/ico_Sylas.jpg"
 	},
 	"ダリウス": {
 		"name": "ダリウス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Darius.jpg"
+		"icon": "/icons/ico_Darius.jpg"
 	},
 	"サイオン": {
 		"name": "サイオン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Sion.jpg"
+		"icon": "/icons/ico_Sion.jpg"
 	},
 	"グウェン": {
 		"name": "グウェン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Gwen.jpg"
+		"icon": "/icons/ico_Gwen.jpg"
 	},
 	"モルデカイザー": {
 		"name": "モルデカイザー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Mordekaiser.jpg"
+		"icon": "/icons/ico_Mordekaiser.jpg"
 	},
 	"エイトロックス": {
 		"name": "エイトロックス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Aatrox.jpg"
+		"icon": "/icons/ico_Aatrox.jpg"
 	},
 	"トリンダメア": {
 		"name": "トリンダメア",
-		"icon": "/lol-matchup-dictionary/icons/ico_Tryndamere.jpg"
+		"icon": "/icons/ico_Tryndamere.jpg"
 	},
 	"ティーモ": {
 		"name": "ティーモ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Teemo.webp"
+		"icon": "/icons/ico_Teemo.webp"
 	},
 	"ワーウィック": {
 		"name": "ワーウィック",
-		"icon": "/lol-matchup-dictionary/icons/ico_Warwick.jpg"
+		"icon": "/icons/ico_Warwick.jpg"
 	},
 	"オーロラ": {
 		"name": "オーロラ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Aurora.jpg"
+		"icon": "/icons/ico_Aurora.jpg"
 	},
 	"ライズ": {
 		"name": "ライズ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Ryze.jpg"
+		"icon": "/icons/ico_Ryze.jpg"
 	},
 	"オーン": {
 		"name": "オーン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Ornn.jpg"
+		"icon": "/icons/ico_Ornn.jpg"
 	},
 	"アカリ": {
 		"name": "アカリ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Akali.jpg"
+		"icon": "/icons/ico_Akali.jpg"
 	},
 	"マルファイト": {
 		"name": "マルファイト",
-		"icon": "/lol-matchup-dictionary/icons/ico_Malphite.jpg"
+		"icon": "/icons/ico_Malphite.jpg"
 	},
 	"ジェイス": {
 		"name": "ジェイス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Jayce.jpg"
+		"icon": "/icons/ico_Jayce.jpg"
 	},
 	"ドクター・ムンド": {
 		"name": "ドクター・ムンド",
-		"icon": "/lol-matchup-dictionary/icons/ico_DrMundo.jpg"
+		"icon": "/icons/ico_DrMundo.jpg"
 	},
 	"ガングプランク": {
 		"name": "ガングプランク",
-		"icon": "/lol-matchup-dictionary/icons/ico_Gangplank.jpg"
+		"icon": "/icons/ico_Gangplank.jpg"
 	},
 	"ハイマーディンガー": {
 		"name": "ハイマーディンガー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Heimerdinger.jpg"
+		"icon": "/icons/ico_Heimerdinger.jpg"
 	},
 	"ヴェイン": {
 		"name": "ヴェイン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Vayne.jpg"
+		"icon": "/icons/ico_Vayne.jpg"
 	},
 	"ヤスオ": {
 		"name": "ヤスオ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Yasuo.jpg"
+		"icon": "/icons/ico_Yasuo.jpg"
 	},
 	"チョ＝ガス": {
 		"name": "チョ＝ガス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Chogath.jpg"
+		"icon": "/icons/ico_Chogath.jpg"
 	},
 	"グラガス": {
 		"name": "グラガス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Gragas.jpg"
+		"icon": "/icons/ico_Gragas.jpg"
 	},
 	"レネクトン": {
 		"name": "レネクトン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Renekton.jpg"
+		"icon": "/icons/ico_Renekton.jpg"
 	},
 	"イラオイ": {
 		"name": "イラオイ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Illaoi.jpg"
+		"icon": "/icons/ico_Illaoi.jpg"
 	},
 	"ガレン": {
 		"name": "ガレン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Garen.jpg"
+		"icon": "/icons/ico_Garen.jpg"
 	},
 	"ウーコン": {
 		"name": "ウーコン",
-		"icon": "/lol-matchup-dictionary/icons/ico_MonkeyKing.jpg"
+		"icon": "/icons/ico_MonkeyKing.jpg"
 	},
 	"ナー": {
 		"name": "ナー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Gnar.jpg"
+		"icon": "/icons/ico_Gnar.jpg"
 	},
 	"ボリベア": {
 		"name": "ボリベア",
-		"icon": "/lol-matchup-dictionary/icons/ico_Volibear.jpg"
+		"icon": "/icons/ico_Volibear.jpg"
 	},
 	"ナサス": {
 		"name": "ナサス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Nasus.jpg"
+		"icon": "/icons/ico_Nasus.jpg"
 	},
 	"ヨリック": {
 		"name": "ヨリック",
-		"icon": "/lol-matchup-dictionary/icons/ico_Yorick.jpg"
+		"icon": "/icons/ico_Yorick.jpg"
 	},
 	"タム・ケンチ": {
 		"name": "タム・ケンチ",
-		"icon": "/lol-matchup-dictionary/icons/ico_TahmKench.jpg"
+		"icon": "/icons/ico_TahmKench.jpg"
 	},
 	"カ・サンテ": {
 		"name": "カ・サンテ",
-		"icon": "/lol-matchup-dictionary/icons/ico_KSante.jpg"
+		"icon": "/icons/ico_KSante.jpg"
 	},
 	"ヴァルス": {
 		"name": "ヴァルス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Varus.jpg"
+		"icon": "/icons/ico_Varus.jpg"
 	},
 	"ヴィエゴ": {
 		"name": "ヴィエゴ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Viego.jpg"
+		"icon": "/icons/ico_Viego.jpg"
 	},
 	"ヨネ": {
 		"name": "ヨネ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Yone.jpg"
+		"icon": "/icons/ico_Yone.jpg"
 	},
 	"スモルダー": {
 		"name": "スモルダー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Smolder.jpg"
+		"icon": "/icons/ico_Smolder.jpg"
 	},
 	"トランドル": {
 		"name": "トランドル",
-		"icon": "/lol-matchup-dictionary/icons/ico_Trundle.jpg"
+		"icon": "/icons/ico_Trundle.jpg"
 	},
 	"ウディア": {
 		"name": "ウディア",
-		"icon": "/lol-matchup-dictionary/icons/ico_Udyr.jpg"
+		"icon": "/icons/ico_Udyr.jpg"
 	},
 	"キヤナ": {
 		"name": "キヤナ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Qiyana.jpg"
+		"icon": "/icons/ico_Qiyana.jpg"
 	},
 	"ダイアナ": {
 		"name": "ダイアナ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Diana.jpg"
+		"icon": "/icons/ico_Diana.jpg"
 	},
 	"ゾーイ": {
 		"name": "ゾーイ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Zoe.jpg"
+		"icon": "/icons/ico_Zoe.jpg"
 	},
 	"カタリナ": {
 		"name": "カタリナ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Katarina.jpg"
+		"icon": "/icons/ico_Katarina.jpg"
 	},
 	"タロン": {
 		"name": "タロン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Talon.jpg"
+		"icon": "/icons/ico_Talon.jpg"
 	},
 	"ガリオ": {
 		"name": "ガリオ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Galio.jpg"
+		"icon": "/icons/ico_Galio.jpg"
 	},
 	"シンドラ": {
 		"name": "シンドラ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Syndra.jpg"
+		"icon": "/icons/ico_Syndra.jpg"
 	},
 	"エコー": {
 		"name": "エコー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Ekko.jpg"
+		"icon": "/icons/ico_Ekko.jpg"
 	},
 	"ラックス": {
 		"name": "ラックス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Lux.jpg"
+		"icon": "/icons/ico_Lux.jpg"
 	},
 	"ゼド": {
 		"name": "ゼド",
-		"icon": "/lol-matchup-dictionary/icons/ico_Zed.jpg"
+		"icon": "/icons/ico_Zed.jpg"
 	},
 	"アクシャン": {
 		"name": "アクシャン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Akshan.jpg"
+		"icon": "/icons/ico_Akshan.jpg"
 	},
 	"タリヤ": {
 		"name": "タリヤ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Taliyah.jpg"
+		"icon": "/icons/ico_Taliyah.jpg"
 	},
 	"トゥイッチ": {
 		"name": "トゥイッチ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Twitch.jpg"
+		"icon": "/icons/ico_Twitch.jpg"
 	},
 	"オリアナ": {
 		"name": "オリアナ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Orianna.jpg"
+		"icon": "/icons/ico_Orianna.jpg"
 	},
 	"フェイ": {
 		"name": "フェイ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Hwei.jpg"
+		"icon": "/icons/ico_Hwei.jpg"
 	},
 	"ツイステッド・フェイト": {
 		"name": "ツイステッド・フェイト",
-		"icon": "/lol-matchup-dictionary/icons/ico_Twistedfate.jpg"
+		"icon": "/icons/ico_Twistedfate.jpg"
 	},
 	"ルブラン": {
 		"name": "ルブラン",
-		"icon": "/lol-matchup-dictionary/icons/ico_leblanc.jpg"
+		"icon": "/icons/ico_leblanc.jpg"
 	},
 	"ブランド": {
 		"name": "ブランド",
-		"icon": "/lol-matchup-dictionary/icons/ico_Brand.jpg"
+		"icon": "/icons/ico_Brand.jpg"
 	},
 	"アニビア": {
 		"name": "アニビア",
-		"icon": "/lol-matchup-dictionary/icons/ico_Anivia.jpg"
+		"icon": "/icons/ico_Anivia.jpg"
 	},
 	"アーリ": {
 		"name": "アーリ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Ahri.jpg"
+		"icon": "/icons/ico_Ahri.jpg"
 	},
 	"リサンドラ": {
 		"name": "リサンドラ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Lissandra.jpg"
+		"icon": "/icons/ico_Lissandra.jpg"
 	},
 	"マルザハール": {
 		"name": "マルザハール",
-		"icon": "/lol-matchup-dictionary/icons/ico_Malzahar.jpg"
+		"icon": "/icons/ico_Malzahar.jpg"
 	},
 	"ゼラス": {
 		"name": "ゼラス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Xerath.jpg"
+		"icon": "/icons/ico_Xerath.jpg"
 	},
 	"ベイガー": {
 		"name": "ベイガー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Veigar.jpg"
+		"icon": "/icons/ico_Veigar.jpg"
 	},
 	"ヴェル＝コズ": {
 		"name": "ヴェル＝コズ",
-		"icon": "/lol-matchup-dictionary/icons/ico_VelKoz.jpg"
+		"icon": "/icons/ico_VelKoz.jpg"
 	},
 	"ヴェックス": {
 		"name": "ヴェックス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Vex.jpg"
+		"icon": "/icons/ico_Vex.jpg"
 	},
 	"スウェイン": {
 		"name": "スウェイン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Swain.jpg"
+		"icon": "/icons/ico_Swain.jpg"
 	},
 	"フィズ": {
 		"name": "フィズ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Fizz.jpg"
+		"icon": "/icons/ico_Fizz.jpg"
 	},
 	"オレリオン・ソル": {
 		"name": "オレリオン・ソル",
-		"icon": "/lol-matchup-dictionary/icons/ico_AurelionSol.jpg"
+		"icon": "/icons/ico_AurelionSol.jpg"
 	},
 	"カサディン": {
 		"name": "カサディン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Kassadin.jpg"
+		"icon": "/icons/ico_Kassadin.jpg"
 	},
 	"アニー": {
 		"name": "アニー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Annie.jpg"
+		"icon": "/icons/ico_Annie.jpg"
 	},
 	"カシオペア": {
 		"name": "カシオペア",
-		"icon": "/lol-matchup-dictionary/icons/ico_Cassiopeia.jpg"
+		"icon": "/icons/ico_Cassiopeia.jpg"
 	},
 	"ビクター": {
 		"name": "ビクター",
-		"icon": "/lol-matchup-dictionary/icons/ico_Viktor.png"
+		"icon": "/icons/ico_Viktor.png"
 	},
 	"アジール": {
 		"name": "アジール",
-		"icon": "/lol-matchup-dictionary/icons/ico_Azir.jpg"
+		"icon": "/icons/ico_Azir.jpg"
 	},
 	"モルガナ": {
 		"name": "モルガナ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Morgana.jpg"
+		"icon": "/icons/ico_Morgana.jpg"
 	},
 	"トリスターナ": {
 		"name": "トリスターナ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Tristana.jpg"
+		"icon": "/icons/ico_Tristana.jpg"
 	},
 	"コーキ": {
 		"name": "コーキ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Corki.jpg"
+		"icon": "/icons/ico_Corki.jpg"
 	},
 	"ジグス": {
 		"name": "ジグス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Ziggs.jpg"
+		"icon": "/icons/ico_Ziggs.jpg"
 	},
 	"メル": {
 		"name": "メル",
-		"icon": "/lol-matchup-dictionary/icons/ico_Mel.webp"
+		"icon": "/icons/ico_Mel.webp"
 	},
 	"ナフィーリ": {
 		"name": "ナフィーリ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Naafiri.webp"
+		"icon": "/icons/ico_Naafiri.webp"
 	},
 	"ユナラ": {
 		"name": "ユナラ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Yunara.webp"
+		"icon": "/icons/ico_Yunara.webp"
 	},
 	"シヴィア": {
 		"name": "シヴィア",
-		"icon": "/lol-matchup-dictionary/icons/ico_Sivir.jpg"
+		"icon": "/icons/ico_Sivir.jpg"
 	},
 	"カイ＝サ": {
 		"name": "カイ＝サ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Kaisa.jpg"
+		"icon": "/icons/ico_Kaisa.jpg"
 	},
 	"ジンクス": {
 		"name": "ジンクス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Jinx.jpg"
+		"icon": "/icons/ico_Jinx.jpg"
 	},
 	"ゼリ": {
 		"name": "ゼリ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Zeri.jpg"
+		"icon": "/icons/ico_Zeri.jpg"
 	},
 	"ジン": {
 		"name": "ジン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Jhin.jpg"
+		"icon": "/icons/ico_Jhin.jpg"
 	},
 	"ルシアン": {
 		"name": "ルシアン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Lucian.jpg"
+		"icon": "/icons/ico_Lucian.jpg"
 	},
 	"ニーラ": {
 		"name": "ニーラ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Nilah.jpg"
+		"icon": "/icons/ico_Nilah.jpg"
 	},
 	"アフェリオス": {
 		"name": "アフェリオス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Aphelios.jpg"
+		"icon": "/icons/ico_Aphelios.jpg"
 	},
 	"ドレイヴン": {
 		"name": "ドレイヴン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Draven.jpg"
+		"icon": "/icons/ico_Draven.jpg"
 	},
 	"コグ＝マウ": {
 		"name": "コグ＝マウ",
-		"icon": "/lol-matchup-dictionary/icons/ico_KogMaw.jpg"
+		"icon": "/icons/ico_KogMaw.jpg"
 	},
 	"サミーラ": {
 		"name": "サミーラ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Samira.jpg"
+		"icon": "/icons/ico_Samira.jpg"
 	},
 	"ミス・フォーチュン": {
 		"name": "ミス・フォーチュン",
-		"icon": "/lol-matchup-dictionary/icons/ico_MissFortune.jpg"
+		"icon": "/icons/ico_MissFortune.jpg"
 	},
 	"ザヤ": {
 		"name": "ザヤ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Xayah.jpg"
+		"icon": "/icons/ico_Xayah.jpg"
 	},
 	"アッシュ": {
 		"name": "アッシュ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Ashe.jpg"
+		"icon": "/icons/ico_Ashe.jpg"
 	},
 	"エズリアル": {
 		"name": "エズリアル",
-		"icon": "/lol-matchup-dictionary/icons/ico_Ezreal.jpg"
+		"icon": "/icons/ico_Ezreal.jpg"
 	},
 	"ケイトリン": {
 		"name": "ケイトリン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Caitlyn.jpg"
+		"icon": "/icons/ico_Caitlyn.jpg"
 	},
 	"カリスタ": {
 		"name": "カリスタ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Kalista.jpg"
+		"icon": "/icons/ico_Kalista.jpg"
 	},
 	"セナ": {
 		"name": "セナ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Senna.jpg"
+		"icon": "/icons/ico_Senna.jpg"
 	},
 	"ナミ": {
 		"name": "ナミ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Nami.jpg"
+		"icon": "/icons/ico_Nami.jpg"
 	},
 	"スレッシュ": {
 		"name": "スレッシュ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Thresh.jpg"
+		"icon": "/icons/ico_Thresh.jpg"
 	},
 	"ソナ": {
 		"name": "ソナ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Sona.jpg"
+		"icon": "/icons/ico_Sona.jpg"
 	},
 	"ミリオ": {
 		"name": "ミリオ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Milio.webp"
+		"icon": "/icons/ico_Milio.webp"
 	},
 	"ルル": {
 		"name": "ルル",
-		"icon": "/lol-matchup-dictionary/icons/ico_Lulu.jpg"
+		"icon": "/icons/ico_Lulu.jpg"
 	},
 	"レオナ": {
 		"name": "レオナ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Leona.jpg"
+		"icon": "/icons/ico_Leona.jpg"
 	},
 	"ザイラ": {
 		"name": "ザイラ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Zyra.jpg"
+		"icon": "/icons/ico_Zyra.jpg"
 	},
 	"バード": {
 		"name": "バード",
-		"icon": "/lol-matchup-dictionary/icons/ico_Bard.jpg"
+		"icon": "/icons/ico_Bard.jpg"
 	},
 	"パイク": {
 		"name": "パイク",
-		"icon": "/lol-matchup-dictionary/icons/ico_Pyke.jpg"
+		"icon": "/icons/ico_Pyke.jpg"
 	},
 	"ソラカ": {
 		"name": "ソラカ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Soraka.jpg"
+		"icon": "/icons/ico_Soraka.jpg"
 	},
 	"カルマ": {
 		"name": "カルマ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Karma.jpg"
+		"icon": "/icons/ico_Karma.jpg"
 	},
 	"ジャンナ": {
 		"name": "ジャンナ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Janna.jpg"
+		"icon": "/icons/ico_Janna.jpg"
 	},
 	"レル": {
 		"name": "レル",
-		"icon": "/lol-matchup-dictionary/icons/ico_Rell.jpg"
+		"icon": "/icons/ico_Rell.jpg"
 	},
 	"ラカン": {
 		"name": "ラカン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Rakan.jpg"
+		"icon": "/icons/ico_Rakan.jpg"
 	},
 	"ジリアン": {
 		"name": "ジリアン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Zilean.jpg"
+		"icon": "/icons/ico_Zilean.jpg"
 	},
 	"ブラウム": {
 		"name": "ブラウム",
-		"icon": "/lol-matchup-dictionary/icons/ico_Braum.jpg"
+		"icon": "/icons/ico_Braum.jpg"
 	},
 	"ブリッツクランク": {
 		"name": "ブリッツクランク",
-		"icon": "/lol-matchup-dictionary/icons/ico_Blitzcrank.jpg"
+		"icon": "/icons/ico_Blitzcrank.jpg"
 	},
 	"エリス": {
 		"name": "エリス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Elise.jpg"
+		"icon": "/icons/ico_Elise.jpg"
 	},
 	"ニダリー": {
 		"name": "ニダリー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Nidalee.jpg"
+		"icon": "/icons/ico_Nidalee.jpg"
 	},
 	"タリック": {
 		"name": "タリック",
-		"icon": "/lol-matchup-dictionary/icons/ico_Taric.jpg"
+		"icon": "/icons/ico_Taric.jpg"
 	},
 	"アリスター": {
 		"name": "アリスター",
-		"icon": "/lol-matchup-dictionary/icons/ico_Alistar.jpg"
+		"icon": "/icons/ico_Alistar.jpg"
 	},
 	"ノーチラス": {
 		"name": "ノーチラス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Nautilus.jpg"
+		"icon": "/icons/ico_Nautilus.jpg"
 	},
 	"マオカイ": {
 		"name": "マオカイ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Maokai.jpg"
+		"icon": "/icons/ico_Maokai.jpg"
 	},
 	"ニーコ": {
 		"name": "ニーコ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Neeko.jpg"
+		"icon": "/icons/ico_Neeko.jpg"
 	},
 	"フィドルスティックス": {
 		"name": "フィドルスティックス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Fiddlesticks.webp"
+		"icon": "/icons/ico_Fiddlesticks.webp"
 	},
 	"セラフィーン": {
 		"name": "セラフィーン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Seraphine.jpg"
+		"icon": "/icons/ico_Seraphine.jpg"
 	},
 	"レナータ・グラスク": {
 		"name": "レナータ・グラスク",
-		"icon": "/lol-matchup-dictionary/icons/ico_Renata.jpg"
+		"icon": "/icons/ico_Renata.jpg"
 	},
 	"シャコ": {
 		"name": "シャコ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Shaco.jpg"
+		"icon": "/icons/ico_Shaco.jpg"
 	},
 	"ユーミ": {
 		"name": "ユーミ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Yuumi.jpg"
+		"icon": "/icons/ico_Yuumi.jpg"
 	},
 	"マスター・イー": {
 		"name": "マスター・イー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Masteryi.jpg"
+		"icon": "/icons/ico_Masteryi.jpg"
 	},
 	"ベル＝ヴェス": {
 		"name": "ベル＝ヴェス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Belveth.jpg"
+		"icon": "/icons/ico_Belveth.jpg"
 	},
 	"レク＝サイ": {
 		"name": "レク＝サイ",
-		"icon": "/lol-matchup-dictionary/icons/ico_RekSai.jpg"
+		"icon": "/icons/ico_RekSai.jpg"
 	},
 	"キンドレッド": {
 		"name": "キンドレッド",
-		"icon": "/lol-matchup-dictionary/icons/ico_Kindred.jpg"
+		"icon": "/icons/ico_Kindred.jpg"
 	},
 	"ヘカリム": {
 		"name": "ヘカリム",
-		"icon": "/lol-matchup-dictionary/icons/ico_Hecarim.jpg"
+		"icon": "/icons/ico_Hecarim.jpg"
 	},
 	"カ＝ジックス": {
 		"name": "カ＝ジックス",
-		"icon": "/lol-matchup-dictionary/icons/ico_KhaZix.jpg"
+		"icon": "/icons/ico_KhaZix.jpg"
 	},
 	"ヌヌ＆ウィルンプ": {
 		"name": "ヌヌ＆ウィルンプ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Nunu.jpg"
+		"icon": "/icons/ico_Nunu.jpg"
 	},
 	"ブライアー": {
 		"name": "ブライアー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Briar.webp"
+		"icon": "/icons/ico_Briar.webp"
 	},
 	"アイバーン": {
 		"name": "アイバーン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Ivern.jpg"
+		"icon": "/icons/ico_Ivern.jpg"
 	},
 	"ジャーヴァンⅣ": {
 		"name": "ジャーヴァンⅣ",
-		"icon": "/lol-matchup-dictionary/icons/ico_JarvanIV.jpg"
+		"icon": "/icons/ico_JarvanIV.jpg"
 	},
 	"イブリン": {
 		"name": "イブリン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Evelynn.jpg"
+		"icon": "/icons/ico_Evelynn.jpg"
 	},
 	"ケイン": {
 		"name": "ケイン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Kayn.jpg"
+		"icon": "/icons/ico_Kayn.jpg"
 	},
 	"リー・シン": {
 		"name": "リー・シン",
-		"icon": "/lol-matchup-dictionary/icons/ico_LeeSin.jpg"
+		"icon": "/icons/ico_LeeSin.jpg"
 	},
 	"グレイブス": {
 		"name": "グレイブス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Graves.jpg"
+		"icon": "/icons/ico_Graves.jpg"
 	},
 	"シン・ジャオ": {
 		"name": "シン・ジャオ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Xinzhao.jpg"
+		"icon": "/icons/ico_Xinzhao.jpg"
 	},
 	"レンガー": {
 		"name": "レンガー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Rengar.jpg"
+		"icon": "/icons/ico_Rengar.jpg"
 	},
 	"カーサス": {
 		"name": "カーサス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Karthus.jpg"
+		"icon": "/icons/ico_Karthus.jpg"
 	},
 	"ノクターン": {
 		"name": "ノクターン",
-		"icon": "/lol-matchup-dictionary/icons/ico_Nocturne.jpg"
+		"icon": "/icons/ico_Nocturne.jpg"
 	},
 	"ラムス": {
 		"name": "ラムス",
-		"icon": "/lol-matchup-dictionary/icons/ico_Rammus.jpg"
+		"icon": "/icons/ico_Rammus.jpg"
 	},
 	"アムム": {
 		"name": "アムム",
-		"icon": "/lol-matchup-dictionary/icons/ico_Amumu.jpg"
+		"icon": "/icons/ico_Amumu.jpg"
 	},
 	"ヴァイ": {
 		"name": "ヴァイ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Vi.jpg"
+		"icon": "/icons/ico_Vi.jpg"
 	},
 	"シヴァーナ": {
 		"name": "シヴァーナ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Shyvana.jpg"
+		"icon": "/icons/ico_Shyvana.jpg"
 	},
 	"セジュアニ": {
 		"name": "セジュアニ",
-		"icon": "/lol-matchup-dictionary/icons/ico_Sejuani.jpg"
+		"icon": "/icons/ico_Sejuani.jpg"
 	},
 	"リリア": {
 		"name": "リリア",
-		"icon": "/lol-matchup-dictionary/icons/ico_Lillia.jpg"
+		"icon": "/icons/ico_Lillia.jpg"
 	},
 	"スカーナー": {
 		"name": "スカーナー",
-		"icon": "/lol-matchup-dictionary/icons/ico_Skarner.jpg"
+		"icon": "/icons/ico_Skarner.jpg"
 	}
 }
