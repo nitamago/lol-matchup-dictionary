@@ -7,7 +7,7 @@ import netlify from '@astrojs/netlify';
 
 // https://astro.build/config
 export default defineConfig({
-  // site: 'https://nitamago.github.io',
+  site: 'https://loldictionary.win/',
   // base: '/lol-matchup-dictionary/',
 
   vite: {
