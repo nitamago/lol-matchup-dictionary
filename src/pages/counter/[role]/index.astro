@@ -114,7 +114,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
             function buildTable(title, data, color, game_count) {
               let table = `<div class="mb-6">
                 <h3 class="font-bold mb-2">${title}</h3>
-                <table class="w-full border border-collapse bg-gray-50">
+                <table class="champion-table-class w-full border border-collapse bg-gray-50">
                   <thead>
                     <tr class="${color}">
                       <th align="left" class="border">自分チャンピオン</th>
@@ -156,13 +156,50 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
             }
 
             // 3つのテーブルを追加
+            html += `
+                <button id="pick-pool-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">
+                  ピックプールフィルタ
+                </button>
+                <button id="reset-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">
+                  ピックプールフィルタ解除
+                </button>`
             html += buildTable("有利なチャンピオン (カウンター)", champData.loses, "bg-green-200", champData.game_count);
             html += buildTable("互角なチャンピオン", champData.even_list, "bg-yellow-200", champData.game_count);
             html += buildTable("不利なチャンピオン", champData.beats, "bg-red-200", champData.game_count);
 
             detailDiv.innerHTML = html;
 
+            // ピックプールによるフィルタ
+            const pickPool = JSON.parse(localStorage.getItem("pickPool") || "{}");
+            if (pickPool.length > 0) {
+              const tables = document.querySelectorAll(".champion-table-class");
+              tables.forEach(table => {
+                const rows = Array.from(table.querySelectorAll("tbody tr"));
 
+                rows.forEach(row => {
+                  const champName = row.cells[0].textContent.trim();
+                  if (!pickPool.includes(champName)) {
+                    row.style.display = "none"; // フィルタ：ピックプール外を非表示
+                  }
+                });
+              })
+            }
+
+            // ピックプールによるフィルタ
+            document.getElementById("pick-pool-filter").addEventListener("click", () => {
+              document.querySelectorAll(".champion-table-class tbody tr").forEach(row => {
+                const champName = row.cells[0].textContent.trim();
+                if (!pickPool.includes(champName)) {
+                  row.style.display = "none"; // フィルタ：ピックプール外を非表示
+                }
+              })
+            });
+            // ピックプールによるフィルタ解除
+            document.getElementById("reset-filter").addEventListener("click", () => {
+              document.querySelectorAll(".champion-table-class tbody tr").forEach(row => {
+                row.style.display = "";
+              });
+            });
           });
         });
       });
