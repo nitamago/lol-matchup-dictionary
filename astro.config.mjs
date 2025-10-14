@@ -17,4 +17,7 @@ export default defineConfig({
   integrations: [sitemap()],
   // adapter: netlify(),
   // output: 'static',
+  redirects: {
+    '/lol-matchup-dictionary': '/'
+  }
 });
