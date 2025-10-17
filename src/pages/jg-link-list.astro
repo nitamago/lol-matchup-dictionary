@@ -1,0 +1,47 @@
+---
+// src/pages/jg-link-list.astro
+import matchups from "../data/jg_matchups.json";
+
+const role = "jg"; // 固定ロールがあるならここに指定（jgなどに変えてもOK）
+
+// JSONの最上位キー（例：イレリア, ヨネ, …）をループ
+const list = [];
+
+for (const [champ, data] of Object.entries(matchups)) {
+  // 勝ち対面
+  for (const enemy of data.beats || []) {
+    list.push({ role, champ, vsChamp: enemy.name, result: "有利" });
+  }
+  // 負け対面
+  for (const enemy of data.loses || []) {
+    list.push({ role, champ, vsChamp: enemy.name, result: "不利" });
+  }
+  // 互角対面
+  for (const enemy of data.even_list || []) {
+    list.push({ role, champ, vsChamp: enemy.name, result: "互角" });
+  }
+}
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>マッチアップ一覧</title>
+  </head>
+  <body class="p-8">
+    <h1 class="text-2xl font-bold mb-4">マッチアップ一覧</h1>
+
+    <ul class="space-y-1">
+      {list.map(({ role, champ, vsChamp, result }) => (
+        <li>
+          <a
+            href={`/${role}/${champ}/${vsChamp}`}
+            class="text-blue-600 hover:underline"
+          >
+            {champ} vs {vsChamp} ({result})
+          </a>
+        </li>
+      ))}
+    </ul>
+  </body>
+</html>
