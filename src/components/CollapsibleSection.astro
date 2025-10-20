@@ -1,0 +1,16 @@
+---
+const { title } = Astro.props;
+---
+
+<div class="border rounded-lg mb-2">
+  <button 
+    class="w-full flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200"
+    onclick="this.nextElementSibling.classList.toggle('hidden')"
+  >
+    <span class="font-semibold">{title}</span>
+    <span>▼</span>
+  </button>
+  <div class="p-3 hidden">
+     <slot />
+  </div>
+</div>
