@@ -117,8 +117,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
                 <table class="champion-table-class w-full border border-collapse bg-gray-50">
                   <thead>
                     <tr class="${color}">
-                      <th align="left" class="border">自分チャンピオン</th>
-                      <th align="left" class="border">勝率</th>
+                      <th align="left" class="border text-4xl lg:text-base">自分チャンピオン</th>
+                      <th align="left" class="border text-4xl lg:text-base">勝率</th>
                     </tr>
                   </thead>
                   <tbody>`;
@@ -144,10 +144,10 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
                       class="w-[32px] h-[32px] block object-contain hover:scale-110 transition"
                     />
                     <a href="/${role}/${champData.name}/${d.name}" target="_blank" 
-                      class="block text-blue-600 hover:underline">${d.name}
+                      class="block text-blue-600 text-4xl lg:text-base hover:underline">${d.name}
                     </a>
                   </td>
-                  <td class="border text-xs ">${win_rate}
+                  <td class="border text-4xl lg:text-base ">${win_rate}
                   </td>
                 </tr>`;
               });
@@ -225,7 +225,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
                     } else {
                       return (
                         <li>
-                          <a href="#" data-champ={c} class="text-blue-600 w-[46px] h-[46px] block hover:underline">
+                          <a href="#" data-champ={c} class="text-blue-600 w-[100px] h-[100px] lg:w-[46px] lg:h-[46px] block hover:underline">
                             <img
                               src={imgMap[c]['icon']}
                               alt={c}
