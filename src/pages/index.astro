@@ -45,7 +45,7 @@ const roles = [
 					<input type="radio" name="pick" value="first" style="transform:scale(2.0);"/> 先出し
 					</label>
 					<label>
-					<input type="radio" name="pick" value="counter" style="transform:scale(2.0);"/> 後出し
+					<input type="radio" name="pick" value="counter" style="transform:scale(2.0); accent-color: red;"/> 後出し
 					</label>
 				</div>
 
@@ -59,7 +59,7 @@ const roles = [
       				<div class="roles roles-first">
 						{roles.map(role => (
 						<a href={`/first/${role.name.toLowerCase()}`} class={role.classStr}>
-						<img src={role.icon} alt={role.name} class="relative w-[150px] lg:w-[100px] rounded-[50%] hover:ring-4 hover:ring-blue-400 hover:ring-offset-2 hover:scale-105"/>
+						<img src={role.icon} alt={role.name} class="relative w-[150px] lg:w-[100px] rounded-[50%] border-3 border-blue-400 hover:ring-4 hover:ring-blue-400 hover:ring-offset-2 hover:scale-105"/>
 						</a>
 						))}
 					</div>
@@ -68,7 +68,7 @@ const roles = [
       				<div class="roles roles-counter" style="display:none;">
 						{roles.map(role => (
 							<a href={`/counter/${role.name.toLowerCase()}`} class={role.classStr}>
-							<img src={role.icon} alt={role.name} class="relative w-[150px] lg:w-[100px] rounded-[50%] hover:ring-4 hover:ring-blue-400 hover:ring-offset-2 hover:scale-105"/>
+							<img src={role.icon} alt={role.name} class="relative w-[150px] lg:w-[100px] rounded-[50%] border-3 border-red-400 hover:ring-4 hover:ring-red-400 hover:ring-offset-2 hover:scale-105"/>
 							</a>
 						))}
 					</div>
