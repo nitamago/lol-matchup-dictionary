@@ -208,6 +208,16 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
   <body class="flex max-lg:flex-col max-lg:text-5xl gap-4 p-4 bg-red-100">
     <!-- 左側：チャンピオン一覧 -->
     <div class="w-full h-[30vh] lg:w-1/2 lg:h-[100vh]">
+      <div class="flex items-center">
+        <img src={
+          role==="top" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/top_icon.PNG":
+          role==="mid" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/mid_icon.PNG":
+          role==="jg" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/jg_icon.PNG":
+          role==="bot" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/bot_icon.PNG":
+          "https://nitamago.github.io/lol-matchup-dictionary/icons/sup_icon.PNG"
+          } alt={role} class="relative w-[100px] lg:w-[50px] rounded-[50%] ">
+        <span class="ml-[10px]">{role}</span>
+      </div>
       <!-- <h1>{role} ロールのチャンピオン</h1> -->
       <h1>対面チャンピオン一覧</h1>
       <ul id="champion-list" class="flex flex-wrap justify-center items-center gap-x-[14px] gap-y-[24px] h-[90%] overflow-scroll bg-gray-100 p-4 text-base border rounded">
