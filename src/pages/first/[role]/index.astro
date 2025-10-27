@@ -181,18 +181,18 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                 : ""
             }`;
 
-            html += `<p class="block lg:hidden mb-4 text-gray-700">
+            html += `<p class="block mb-4 text-gray-700">
               ※下のチャンピオン名をクリックすると、詳細な解説ページが表示されます
-            </p>`;
-            html += `<p class="hidden lg:block mb-4 text-gray-700">
-              ※右のチャンピオン名をクリックすると、詳細な解説ページが表示されます
-            </p>`;
+            </p>
+            <button id="small-sample-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">小サンプルフィルタ</button>
+            <button id="reset-small-sample-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">小サンプルフィルタ解除</button>
+            `;
 
             // 共通のテーブル生成関数
             function buildTable(title, data, color) {
               let table = `<div class="mb-6">
                 <h3 class="font-bold mb-2">${title}</h3>
-                <table class="w-full border border-collapse bg-gray-50">
+                <table class="vs-champ-table w-full border border-collapse bg-gray-50">
                   <thead>
                     <tr class="${color}">
                       <th align="left" class="border text-4xl lg:text-lg">相手チャンピオン</th>
@@ -209,8 +209,11 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                 } else {
                   win_rate = (50 + parseFloat(d.delta2)).toFixed(1)+'%';
                 }
-                 
-                table += `<tr>
+
+                // ✅ win_rateに*が含まれていたら非表示にする
+                const rowStyle = win_rate.includes("*") ? 'style="display: none;"' : "";
+
+                table += `<tr ${rowStyle}> 
                   <td class="flex flex-row border p-[3px]">
                     <img
                       src=${imgMap[d.name]['icon']}
@@ -230,13 +233,30 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
             }
 
             // 3つのテーブルを追加
-            html += buildTable("有利なチャンピオン", champData.beats, "bg-green-200");
-            html += buildTable("互角なチャンピオン", champData.even_list, "bg-yellow-200");
             html += buildTable("不利なチャンピオン", champData.loses, "bg-red-200");
+            html += buildTable("互角なチャンピオン", champData.even_list, "bg-yellow-200");
+            html += buildTable("有利なチャンピオン", champData.beats, "bg-green-200");
 
             detailDiv.innerHTML = html;
 
+            // 生成後にボタンを取得してイベント設定
+            document.getElementById("small-sample-filter").addEventListener("click", () => {
+              document.querySelectorAll(".vs-champ-table tbody tr").forEach(row => {
+                const winRate = row.cells[1].textContent.trim();
+                if (winRate.includes("*")) {
+                  row.style.display = "none"; // フィルタ：非表示
+                }
+              });
+            });
 
+            document.getElementById("reset-small-sample-filter").addEventListener("click", () => {
+              document.querySelectorAll(".vs-champ-table tbody tr").forEach(row => {
+                const winRate = row.cells[1].textContent.trim();
+                if (winRate.includes("*")) {
+                  row.style.display = ""; // フィルタ：表示
+                }
+              });
+            });
           });
         });
       });
