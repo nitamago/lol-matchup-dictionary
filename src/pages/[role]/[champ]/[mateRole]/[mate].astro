@@ -82,13 +82,32 @@ const ga4TrackingCode = `
   gtag("event", "synergy");
 </script>
 `;
+const voteCode = `
+<script>
+  function vote(type, pageId) {
+    const API_BASE = "https://lol-matchup-dictionary-reaction-api.lol-matchup-dictionary.workers.dev"
+    const key = "voted_"+pageId;
+    if (localStorage.getItem(key)) {
+      console.log("すでに投票済みです！");
+      return;
+    }
+
+    fetch(API_BASE+"/"+type+"?page="+pageId)
+      .then(r => r.json())
+      .then(data => {
+        localStorage.setItem(key, "true");
+        console.log("投票完了", data);
+      });
+  }
+</script>
+`;
 ---
 <html>
   <head>
     <meta charset="UTF-8" />
 		<!-- Google tag (gtag.js) -->
     <Fragment set:html={ga4TrackingCode} />
-		</script>
+    <Fragment set:html={voteCode} />
     {<title>{role}{champ} {mateRole}{mate} シナジー解説</title>}
   </head>
   <body>
@@ -96,32 +115,77 @@ const ga4TrackingCode = `
       {content === "<p>解説が見つかりません</p>" ? <h2>{role} {champDecode} and {mateRole} {mateDecode}</h2> : ""}
       <div set:html={content}></div>
       <div class="ai-disclaimer">
-        ※本記事の内容は<strong>AI（人工知能）</strong>によって自動生成されたものであり、<br>
-        人間による監修を経ていない部分があります。情報の正確性や最新性を保証するものではありません。
+        <p>
+          ※本記事の内容は<strong>AI（人工知能）</strong>によって自動生成されたものであり、<br>
+          人間による監修を経ていない部分があります。情報の正確性や最新性を保証するものではありません。
+        </p>
+
+        <div class="ai-feedback">
+          <p>🔍 内容の精度はいかがでしたか？ 改善のためにフィードバックをお願いします。</p>
+          <div class="buttons">
+            <button onclick="vote('upvote', location.pathname)">👍 よかった</button>
+            <button onclick="vote('downvote', location.pathname)">👎 いまいち</button>
+          </div>
+        </div>
       </div>
+
       <style>
         .ai-disclaimer {
-          padding: 10px 14px;
-          margin: 20px 0;
+          padding: 14px 18px;
+          margin: 30px 0;
+          background-color: #f9f9f9;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          line-height: 1.6;
+        }
+
+        .ai-feedback {
+          margin-top: 16px;
+          padding-top: 12px;
+          border-top: 1px solid #ddd;
+        }
+
+        .ai-feedback p {
+          margin-bottom: 10px;
+          font-size: 0.95rem;
+          color: #444;
+        }
+
+        .buttons {
+          display: flex;
+          gap: 10px;
+          justify-content: center;
+        }
+
+        .buttons button {
+          padding: 6px 14px;
+          border: none;
+          border-radius: 20px;
+          cursor: pointer;
+          font-size: 0.95rem;
+          transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .buttons button:first-child {
+          background-color: #e3f9e5;
+          color: #207227;
+        }
+
+        .buttons button:first-child:hover {
+          background-color: #c9f3cb;
+          transform: scale(1.05);
+        }
+
+        .buttons button:last-child {
+          background-color: #fde7e7;
+          color: #a02323;
+        }
+
+        .buttons button:last-child:hover {
+          background-color: #f9c9c9;
+          transform: scale(1.05);
         }
       </style>
-      <div>
-        <script src="https://giscus.app/client.js"
-          data-repo="nitamago/lol-matchup-dictionary"
-          data-repo-id="R_kgDOPzkAPA"
-          data-category="General"
-          data-category-id="DIC_kwDOPzkAPM4Cw_-U"
-          data-mapping="pathname"
-          data-strict="0"
-          data-reactions-enabled="1"
-          data-emit-metadata="0"
-          data-input-position="bottom"
-          data-theme="preferred_color_scheme"
-          data-lang="ja"
-          crossorigin="anonymous"
-          async>
-        </script>
-      </div>
     </div>
   </body>
 </html>
