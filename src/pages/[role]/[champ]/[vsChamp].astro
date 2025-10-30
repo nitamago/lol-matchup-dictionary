@@ -153,29 +153,33 @@ const ga4TrackingCode = `
   gtag("event", "detail");
 </script>
 `;
+
+const voteCode = `
+<script>
+  function vote(type:string, pageId:string) {
+    const API_BASE = "https://lol-matchup-dictionary-reaction-api.lol-matchup-dictionary.workers.dev"
+    const key = "voted_"+pageId";
+    if (localStorage.getItem(key)) {
+      console.log("すでに投票済みです！");
+      return;
+    }
+
+    fetch(API_BASE+"/"+type+"?page="+pageId)
+      .then(r => r.json())
+      .then(data => {
+        localStorage.setItem(key, "true");
+        console.log("投票完了", data);
+      });
+  }
+</script>
+`;
 ---
 <html>
   <head>
     <meta charset="UTF-8" />
 		<!-- Google tag (gtag.js) -->
     <Fragment set:html={ga4TrackingCode} />
-		<script>
-      function vote(type:string, pageId:string) {
-        const API_BASE = "https://lol-matchup-dictionary-reaction-api.lol-matchup-dictionary.workers.dev"
-        const key = `voted_${pageId}`;
-        if (localStorage.getItem(key)) {
-          console.log("すでに投票済みです！");
-          return;
-        }
-
-        fetch(`${API_BASE}/${type}?page=${pageId}`)
-          .then(r => r.json())
-          .then(data => {
-            localStorage.setItem(key, "true");
-            console.log("投票完了", data);
-          });
-      }
-    </script>
+    <Fragment set:html={voteCode} />
   </head>
   <body>
     <div class="flex flex-wrap">
@@ -200,8 +204,8 @@ const ga4TrackingCode = `
         }
       </style>
       <div class="flex items-center gap-4">
-        <button onclick="vote('up', location.pathname)">👍 </button>
-        <button onclick="vote('down', location.pathname)">👎 </button>
+        <button onclick="vote('upvote', location.pathname)">👍 </button>
+        <button onclick="vote('downvote', location.pathname)">👎 </button>
       </div>
     </div>
   </body>
