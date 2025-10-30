@@ -1,5 +1,4 @@
 ---
-import "../../../styles/global.css";
 import fs from "fs";
 import path from "path";
 
@@ -183,7 +182,7 @@ const voteCode = `
     <Fragment set:html={voteCode} />
   </head>
   <body>
-    <div class="flex flex-wrap">
+    <div>
       {content === "<p>解説が見つかりません</p>" ? <h2>{champDecode} vs {vsChampDecode}</h2> : ""}
       <div set:html={content}></div>
       <div>
@@ -195,34 +194,77 @@ const voteCode = `
         )}
       </div>
 
-      <div class="ai-disclaimer bg-gray-50 border border-gray-200 rounded-xl p-4 mt-6">
-        <p class="text-sm text-gray-700 leading-relaxed">
-          ※本記事の内容は
-          <strong>AI（人工知能）</strong>
-          によって自動生成されたものであり、<br>
+      <div class="ai-disclaimer">
+        <p>
+          ※本記事の内容は<strong>AI（人工知能）</strong>によって自動生成されたものであり、<br>
           人間による監修を経ていない部分があります。情報の正確性や最新性を保証するものではありません。
         </p>
 
-        <div class="mt-4 border-t border-gray-200 pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          <p class="text-sm text-gray-600 mb-2 sm:mb-0">
-            🔍 内容の精度はいかがでしたか？ 改善のためにフィードバックをお願いします。
-          </p>
-          <div class="flex gap-3">
-            <button
-              onclick="vote('upvote', location.pathname)"
-              class="flex items-center gap-1 bg-green-100 hover:bg-green-200 text-green-700 px-3 py-1.5 rounded-full transition"
-            >
-              👍 よかった
-            </button>
-            <button
-              onclick="vote('downvote', location.pathname)"
-              class="flex items-center gap-1 bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1.5 rounded-full transition"
-            >
-              👎 いまいち
-            </button>
+        <div class="ai-feedback">
+          <p>🔍 内容の精度はいかがでしたか？ 改善のためにフィードバックをお願いします。</p>
+          <div class="buttons">
+            <button onclick="vote('upvote', location.pathname)">👍 よかった</button>
+            <button onclick="vote('downvote', location.pathname)">👎 いまいち</button>
           </div>
         </div>
       </div>
+
+      <style>
+        .ai-disclaimer {
+          padding: 14px 18px;
+          margin: 30px 0;
+          background-color: #f9f9f9;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          line-height: 1.6;
+        }
+
+        .ai-feedback {
+          margin-top: 16px;
+          padding-top: 12px;
+          border-top: 1px solid #ddd;
+        }
+
+        .ai-feedback p {
+          margin-bottom: 10px;
+          font-size: 0.95rem;
+          color: #444;
+        }
+
+        .buttons {
+          display: flex;
+          gap: 10px;
+        }
+
+        .buttons button {
+          padding: 6px 14px;
+          border: none;
+          border-radius: 20px;
+          cursor: pointer;
+          font-size: 0.95rem;
+          transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .buttons button:first-child {
+          background-color: #e3f9e5;
+          color: #207227;
+        }
+
+        .buttons button:first-child:hover {
+          background-color: #c9f3cb;
+          transform: scale(1.05);
+        }
+
+        .buttons button:last-child {
+          background-color: #fde7e7;
+          color: #a02323;
+        }
+
+        .buttons button:last-child:hover {
+          background-color: #f9c9c9;
+          transform: scale(1.05);
+        }
+      </style>
     </div>
   </body>
 </html>
