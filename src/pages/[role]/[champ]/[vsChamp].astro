@@ -159,7 +159,23 @@ const ga4TrackingCode = `
     <meta charset="UTF-8" />
 		<!-- Google tag (gtag.js) -->
     <Fragment set:html={ga4TrackingCode} />
-		</script>
+		<script>
+      function vote(type:string, pageId:string) {
+        const API_BASE = "https://lol-matchup-dictionary-reaction-api.lol-matchup-dictionary.workers.dev"
+        const key = `voted_${pageId}`;
+        if (localStorage.getItem(key)) {
+          console.log("すでに投票済みです！");
+          return;
+        }
+
+        fetch(`${API_BASE}/${type}?page=${pageId}`)
+          .then(r => r.json())
+          .then(data => {
+            localStorage.setItem(key, "true");
+            console.log("投票完了", data);
+          });
+      }
+    </script>
   </head>
   <body>
     <div class="flex flex-wrap">
