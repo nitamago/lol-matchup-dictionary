@@ -4,6 +4,7 @@ import "../../../styles/global.css";
 import fs from "fs";
 import path from "path";
 import CollapsibleSection from "../../../components/CollapsibleSection.astro";
+import Header from "../../../components/Header.astro";
 
 // JSON のトップレベルはオブジェクトなので keys で role を取得
 export async function getStaticPaths() {
@@ -546,6 +547,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
     </script>
   </head>
   <body class="flex-col max-lg:text-5xl gap-4 p-4 bg-blue-100">
+    <Header selectedSide="先" />
     <div class="block"> 
       <CollapsibleSection title="自チームチャンピオン一覧">
         {role !== 'top' &&
@@ -740,7 +742,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
     </div>
     <div class="flex-col lg:flex-row flex">
       <!-- 左側：チャンピオン一覧 -->
-      <div class="w-full h-[50vh] lg:w-1/2 lg:h-[100vh] overflow-y-scroll bg-gray-50 border rounded p-4 m-4">
+      <div class="w-full h-[50vh] lg:w-1/2 lg:h-[100vh] overflow-y-scroll bg-gray-50 border rounded p-4">
         <div class="flex items-center">
           <img src={
             role==="top" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/top_icon.PNG":

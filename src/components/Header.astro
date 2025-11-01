@@ -1,0 +1,89 @@
+---
+const { selectedSide = "先" } = Astro.props;
+
+// 選択状態の制御は親側（ページ）で持たせても良い
+// この例では見た目上のトグルのみ実装
+const lanes = [
+  { name: "Top", img: "https://nitamago.github.io/lol-matchup-dictionary/icons/top_icon.PNG", link: "/first/top" },
+  { name: "Jungle", img: "https://nitamago.github.io/lol-matchup-dictionary/icons/jg_icon.PNG", link: "/first/jg" },
+  { name: "Mid", img: "https://nitamago.github.io/lol-matchup-dictionary/icons/mid_icon.PNG", link: "/first/mid" },
+  { name: "Bot", img: "https://nitamago.github.io/lol-matchup-dictionary/icons/bot_icon.PNG", link: "/first/bot" },
+  { name: "Support", img: "https://nitamago.github.io/lol-matchup-dictionary/icons/sup_icon.PNG", link: "/first/sup" },
+];
+
+---
+
+<header class="flex justify-between items-center px-4 py-2 bg-gray-50 border-b border-gray-200">
+    <!-- 左：先攻/後攻トグル -->
+    <div id="side-toggle" class="flex gap-2">
+        <button
+        id="attack-btn"
+        class="px-4 py-2 rounded-md font-semibold transition bg-blue-500 text-white"
+        >
+        先
+        </button>
+        <button
+        id="defense-btn"
+        class="px-4 py-2 rounded-md font-semibold transition bg-gray-200 hover:bg-gray-300 text-gray-700"
+        >
+        後
+        </button>
+    </div>
+
+    <!-- 右：レーンボタン -->
+    <nav class="flex">
+        {lanes.map((lane) => (
+        <a href={lane.link} title={lane.name} class="lane-link">
+            <img
+            src={lane.img}
+            alt={lane.name}
+            class="w-[100px] h-[100px] object-contain hover:scale-110 transition-transform"
+            />
+        </a>
+        ))}
+    </nav>
+
+    <!-- クライアントサイドスクリプト -->
+    <script>
+    const attackBtn = document.getElementById("attack-btn");
+    const defenseBtn = document.getElementById("defense-btn");
+    const laneLinks = document.querySelectorAll(".lane-link");
+
+    function updateLaneLinks(side) {
+        laneLinks.forEach((link) => {
+            const base = link.getAttribute("href")?.split('/')[2];
+            if (side === "先") {
+                link.setAttribute("href", `/first/${base}`);
+            } else {
+                link.setAttribute("href", `/counter/${base}`);
+            }
+        });
+    }
+
+    function setActive(side) {
+        if (side === "先") {
+            attackBtn.classList.add("bg-blue-500", "text-white");
+            attackBtn.classList.remove("bg-gray-200", "text-gray-700");
+            defenseBtn.classList.remove("bg-red-500", "text-white");
+            defenseBtn.classList.add("bg-gray-200", "text-gray-700");
+        } else {
+            defenseBtn.classList.add("bg-red-500", "text-white");
+            defenseBtn.classList.remove("bg-gray-200", "text-gray-700");
+            attackBtn.classList.remove("bg-blue-500", "text-white");
+            attackBtn.classList.add("bg-gray-200", "text-gray-700");
+        }
+
+        // ローカルストレージに保存（ページ遷移しても保持）
+        localStorage.setItem("selectedSide", side);
+
+        updateLaneLinks(side);
+    }
+
+    attackBtn.addEventListener("click", () => setActive("先"));
+    defenseBtn.addEventListener("click", () => setActive("後"));
+
+    // ページ読み込み時に状態を復元
+    const savedSide = localStorage.getItem("selectedSide");
+    if (savedSide) setActive(savedSide);
+    </script>
+</header>
