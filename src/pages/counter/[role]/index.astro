@@ -162,7 +162,17 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
                 </button>
                 <button id="reset-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">
                   ピックプールフィルタ解除
-                </button>`
+                </button>
+                
+                <!-- ▼ ピックプール設定リンクを追加 -->
+                <button class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">
+                  <a
+                    href="/pick-pool"
+                  >
+                    ピックプールを設定
+                  </a>
+                </button>
+                `
             html += buildTable("有利なチャンピオン (カウンター)", champData.loses, "bg-green-200", champData.game_count);
             html += buildTable("互角なチャンピオン", champData.even_list, "bg-yellow-200", champData.game_count);
             html += buildTable("不利なチャンピオン", champData.beats, "bg-red-200", champData.game_count);
@@ -207,7 +217,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
   </head>
   <body class="flex max-lg:flex-col max-lg:text-5xl gap-4 p-4 bg-red-100">
     <!-- 左側：チャンピオン一覧 -->
-    <div class="w-full h-[30vh] lg:w-1/2 lg:h-[100vh]">
+    <div class="w-full h-[50vh] lg:w-1/2 lg:h-[100vh] mb-[5vh]">
       <div class="flex items-center">
         <img src={
           role==="top" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/top_icon.PNG":

@@ -74,12 +74,24 @@ champList = champList.sort((a, b) => a.name.localeCompare(b.name, "ja"));
       </p>
 
       <div class="flex gap-3 items-center mb-4">
+        <button id="saveBtn" class="mt-5 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-4xl lg:text-base">
+          保存
+        </button>
+        <button
+          onclick="history.back()"
+          class="mt-5 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-4xl lg:text-base"
+        >
+          戻る
+        </button>
+      </div>
+      <div class="flex gap-3 items-center mb-4">
         <button id="sortBtn" class="bg-gray-200 text-gray-900 rounded-md px-3 py-1 hover:bg-gray-300 transition text-lg">
           名前順ソート
         </button>
       </div>
 
-      <div id="champGrid" class="grid">
+
+      <div id="champGrid" class="grid overflow-scroll h-[80vh]">
         {champList.map((c) => (
           <div class="champ" data-id={c.id} data-name={c.name}>
             <img src={c.icon} alt={c.name} />
@@ -87,10 +99,6 @@ champList = champList.sort((a, b) => a.name.localeCompare(b.name, "ja"));
           </div>
         ))}
       </div>
-
-      <button id="saveBtn" class="mt-5 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-4xl lg:text-base">
-        保存
-      </button>
     </main>
 
     <script type="module">
