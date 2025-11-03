@@ -1,5 +1,5 @@
 ---
-const { selectedSide = "先" } = Astro.props;
+const { selectedSide, role } = Astro.props;
 
 // 選択状態の制御は親側（ページ）で持たせても良い
 // この例では見た目上のトグルのみ実装
@@ -14,6 +14,15 @@ const lanes = [
 ---
 
 <header class="flex justify-between items-center px-4 py-2 bg-gray-50 border-b border-gray-200">
+    <img src={
+    role==="top" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/top_icon.PNG":
+    role==="mid" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/mid_icon.PNG":
+    role==="jg" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/jg_icon.PNG":
+    role==="bot" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/bot_icon.PNG":
+    "https://nitamago.github.io/lol-matchup-dictionary/icons/sup_icon.PNG"
+    } alt={role} class="relative w-[100px] lg:w-[50px] rounded-[50%] ">
+    <span class="ml-[10px]">{role}</span>
+
     <!-- 左：先攻/後攻トグル -->
     <div id="side-toggle" class="flex gap-2">
         <button
