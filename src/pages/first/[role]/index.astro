@@ -173,7 +173,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
             }
 
             // 詳細リスト生成（右側）
-            let html = `<h2>${champData.name}</h2>`;
+            let html = "<div class='bg-gray-50 p-4'>";
+            html += `<h2>${champData.name}</h2>`;
             const formatter = new Intl.NumberFormat("ja-JP");
             html += `<h3>ゲーム数: ${formatter.format(champData.game_count)}</h3>`;
             html += `${
@@ -184,9 +185,10 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
 
             html += `<p class="block mb-4 text-gray-700">
               ※下のチャンピオン名をクリックすると、詳細な解説ページが表示されます
-            </p>
-            <button id="small-sample-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">小サンプルフィルタ</button>
-            <button id="reset-small-sample-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">小サンプルフィルタ解除</button>
+              </p>
+              <button id="small-sample-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">小サンプルフィルタ</button>
+              <button id="reset-small-sample-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">小サンプルフィルタ解除</button>
+            </div>
             `;
 
             // 共通のテーブル生成関数
@@ -234,9 +236,11 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
             }
 
             // 3つのテーブルを追加
+            html += "<div class='overflow-y-scroll h-[80vh]'>";
             html += buildTable("不利なチャンピオン", champData.loses, "bg-red-200");
             html += buildTable("互角なチャンピオン", champData.even_list, "bg-yellow-200");
             html += buildTable("有利なチャンピオン", champData.beats, "bg-green-200");
+            html += "</div>";
 
             detailDiv.innerHTML = html;
 
@@ -547,8 +551,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
     </script>
   </head>
   <body class="flex-col max-lg:text-5xl gap-4 p-4 bg-blue-100">
-    <Header selectedSide="先" />
-    <div class="block"> 
+    <Header selectedSide="先" role={role} />
+    <div class="block mt-[0.5vh]"> 
       <CollapsibleSection title="自チームチャンピオン一覧">
         {role !== 'top' &&
           <h2>Top</h2>
@@ -749,15 +753,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
       <!-- 左側：チャンピオン一覧 -->
       <div class="w-full h-[50vh] lg:w-1/2 lg:h-[100vh] overflow-y-scroll bg-gray-50 border rounded p-4">
         <div class="flex items-center">
-          <img src={
-            role==="top" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/top_icon.PNG":
-            role==="mid" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/mid_icon.PNG":
-            role==="jg" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/jg_icon.PNG":
-            role==="bot" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/bot_icon.PNG":
-            "https://nitamago.github.io/lol-matchup-dictionary/icons/sup_icon.PNG"
-            } alt={role} class="relative w-[100px] lg:w-[50px] rounded-[50%] ">
-          <span class="ml-[10px]">{role}</span>
-          <h1 class="font-bold ml-30 text-center text-4xl lg:text-lg">自分チャンピオン一覧</h1>
+          <span class="font-semibold text-center text-5xl lg:text-lg">自分チャンピオン一覧</span>
         </div>
         <button id="pick-pool-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">
           ピックプールフィルタ
@@ -840,7 +836,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
       </div>
       
       <!-- 右側：詳細表示 -->
-      <div id="champion-detail" class="lg:w-1/2 sticky top-0 m-4">
+      <div id="champion-detail" class="lg:w-1/2 sticky top-0 mt-[0.5vh] ml-[0.5vh]">
         <p class="block lg:hidden font-semibold text-blue-700">
           上の一覧から対面チャンピオン名をクリックしてください
         </p>

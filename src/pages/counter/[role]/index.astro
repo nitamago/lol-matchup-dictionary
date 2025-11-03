@@ -95,7 +95,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
             }
 
             // 詳細リスト生成（右側）
-            let html = `<h2>${champData.name}</h2>`;
+            let html = "<div class='bg-gray-50 p-4'>";
+            html += `<h2>${champData.name}</h2>`;
             const formatter = new Intl.NumberFormat("ja-JP");
             html += `<h3>ゲーム数: ${formatter.format(champData.game_count)}</h3>`;
             html += `${
@@ -104,12 +105,31 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
                 : ""
             }`;
 
-            html += `<p class="block lg:hidden mb-4 text-gray-700">
+            html += `<p class="block lg:hidden text-gray-700">
               ※下のチャンピオン名をクリックすると、詳細な解説ページが表示されます
             </p>`;
-            html += `<p class="hidden lg:block mb-4 text-gray-700">
+            html += `<p class="hidden lg:block text-gray-700">
               ※右のチャンピオン名をクリックすると、詳細な解説ページが表示されます
             </p>`;
+
+            html += `
+                <button id="pick-pool-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">
+                  ピックプールフィルタ
+                </button>
+                <button id="reset-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">
+                  ピックプールフィルタ解除
+                </button>
+                
+                <!-- ▼ ピックプール設定リンクを追加 -->
+                <button class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">
+                  <a
+                    href="/pick-pool"
+                  >
+                    ピックプールを設定
+                  </a>
+                </button>
+                `
+            html += "</div>";
 
             // 共通のテーブル生成関数
             function buildTable(title, data, color, game_count) {
@@ -157,26 +177,11 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
             }
 
             // 3つのテーブルを追加
-            html += `
-                <button id="pick-pool-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">
-                  ピックプールフィルタ
-                </button>
-                <button id="reset-filter" class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">
-                  ピックプールフィルタ解除
-                </button>
-                
-                <!-- ▼ ピックプール設定リンクを追加 -->
-                <button class="mt-2 border rounded px-2 py-1 bg-gray-200 hover:bg-gray-300">
-                  <a
-                    href="/pick-pool"
-                  >
-                    ピックプールを設定
-                  </a>
-                </button>
-                `
+            html += "<div class='overflow-y-scroll h-[90vh]'>";
             html += buildTable("有利なチャンピオン (カウンター)", champData.loses, "bg-green-200", champData.game_count);
             html += buildTable("互角なチャンピオン", champData.even_list, "bg-yellow-200", champData.game_count);
             html += buildTable("不利なチャンピオン", champData.beats, "bg-red-200", champData.game_count);
+            html += "</div>";
 
             detailDiv.innerHTML = html;
 
@@ -217,31 +222,21 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
     </script>
   </head>
   <body class="flex-col max-lg:text-5xl gap-4 p-4 bg-red-100">
-    <Header selectedSide="後" />
+    <Header selectedSide="後" role={role} />
 
     <div class="flex-col lg:flex-row flex">
       <!-- 左側：チャンピオン一覧 -->
-      <div class="w-full h-[50vh] lg:w-1/2 lg:h-[100vh] mb-[5vh]">
-        <div class="flex items-center">
-          <img src={
-            role==="top" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/top_icon.PNG":
-            role==="mid" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/mid_icon.PNG":
-            role==="jg" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/jg_icon.PNG":
-            role==="bot" ? "https://nitamago.github.io/lol-matchup-dictionary/icons/bot_icon.PNG":
-            "https://nitamago.github.io/lol-matchup-dictionary/icons/sup_icon.PNG"
-            } alt={role} class="relative w-[100px] lg:w-[50px] rounded-[50%] ">
-          <span class="ml-[10px]">{role}</span>
-        </div>
+      <div class="w-full h-[50vh] lg:w-1/2 lg:h-[100vh] bg-gray-50 mt-[0.5vh]">
         <!-- <h1>{role} ロールのチャンピオン</h1> -->
         <h1>対面チャンピオン一覧</h1>
-        <ul id="champion-list" class="flex flex-wrap justify-center items-center gap-x-[14px] gap-y-[24px] h-[90%] overflow-scroll bg-gray-100 p-4 text-base border rounded">
+        <ul id="champion-list" class="flex flex-wrap justify-center items-center gap-x-[14px] gap-y-[24px] h-[90%] overflow-scroll p-4 text-base border rounded">
           {champions.slice() // 元配列を壊さないようコピー
                     .sort((a, b) => a.localeCompare(b, "ja")) // 日本語に対応した昇順ソート
                     .map(c => {
                       if (!(c in imgMap)) {
                         return (
                           <li>
-                            <a href="#" data-champ={c} class="text-blue-600 hover:underline">
+                            <a href="#" data-champ={c} class="text-blue-600 hover:underline text-5xl lg:text-lg">
                               {c}
                             </a>
                           </li> 
@@ -249,11 +244,11 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
                       } else {
                         return (
                           <li>
-                            <a href="#" data-champ={c} class="text-blue-600 w-[100px] h-[100px] lg:w-[46px] lg:h-[46px] block hover:underline">
+                            <a href="#" data-champ={c} class="text-blue-600 block hover:underline text-2xl lg:text-lg">
                               <img
                                 src={imgMap[c]['icon']}
                                 alt={c}
-                                class="object-contain hover:scale-110 transition"
+                                class="w-[100px] h-[100px] lg:w-[46px] lg:h-[46px] object-contain hover:scale-110 transition"
                               />
                               {c}
                             </a>
@@ -264,7 +259,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap } = Astro.props;
       </div>
 
       <!-- 右側：詳細表示 -->
-      <div id="champion-detail" class="lg:w-1/2 sticky top-0">
+      <div id="champion-detail" class="lg:w-1/2 sticky top-0 mt-[0.5vh] ml-[0.5vh]">
         <p class="block lg:hidden font-semibold text-blue-700">
           上の一覧から対面チャンピオン名をクリックしてください
         </p>
