@@ -25,6 +25,9 @@ export async function getStaticPaths() {
   const synergyByRole: Record<string, any> = {};
   const synergyKeysByRole: Record<string, any> = {};
 
+  const oppositeByRole: Record<string, any> = {};
+  const oppositeKeysByRole: Record<string, any> = {};
+
   const rawDataByRole: Record<string, any> = {};
 
   for (const role of roles) {
@@ -42,7 +45,7 @@ export async function getStaticPaths() {
     } catch (err) {
       matchupsByRole[role] = [];
       dataByRole[role] = [];
-      console.warn(`${role}_matchu_synergyps.json が読み込めません:`, err);
+      console.warn(`${role}_matchup_synergyps.json が読み込めません:`, err);
     }
     try {
       const runeBuildFilePath = `./src/data/${role}_rune_build.json`;
@@ -91,6 +94,44 @@ export async function getStaticPaths() {
     }
 
     try {
+      const oppositeFilePath = `./src/data/${role}_opposite_data.json`;
+      const oppositeDataRaw: Record<string, any> = JSON.parse(fs.readFileSync(oppositeFilePath, "utf-8"));
+      for (const champ of Object.keys(oppositeDataRaw)) {
+        if (oppositeDataRaw[champ]["game_count"] < 14000) {
+          delete oppositeDataRaw[champ];
+        }
+      }
+      const oppositeData: Record<string, any> = {};
+      const pos_key_set: Record<string, any> = {};
+      for (const champ of Object.keys(oppositeDataRaw)) {
+        for (const pos of Object.keys(oppositeDataRaw[champ])) {
+          if (!(pos in oppositeData)) {
+            oppositeData[pos] = {};
+          }
+          for (const opp of Object.keys(oppositeDataRaw[champ][pos])) {
+            if (!(champ in oppositeData[pos])) {
+              oppositeData[pos][champ] = {};
+            }
+            oppositeData[pos][champ][opp] = oppositeDataRaw[champ][pos][opp];
+          }
+        }
+      }
+      oppositeByRole[role] = oppositeData;
+      oppositeKeysByRole[role] = {'top':new Set(), 'mid':new Set(), 'jg':new Set(), 'bot':new Set(), 'sup':new Set()};
+      for (const pos of Object.keys(oppositeData)) {
+        for (const champ of Object.keys(oppositeData[pos])) {
+          const list: string[] = Object.keys(oppositeData[pos][champ]);
+          oppositeKeysByRole[role][pos] = new Set([...oppositeKeysByRole[role][pos], ...new Set(list)]); ;
+        }
+        oppositeKeysByRole[role][pos] = Array.from(oppositeKeysByRole[role][pos])
+      }
+    } catch (err) {
+      oppositeByRole[role] = {};
+      oppositeKeysByRole[role] = {'top':[], 'mid':[], 'jg':[], 'bot':[], 'sup':[]};
+      console.warn(`${role}_opposite.json が読み込めません:`, err);
+    }
+
+    try {
       const rawDataFilePath = `./src/data/${role}_raw_data.json`;
       rawDataByRole[role] = JSON.parse(fs.readFileSync(rawDataFilePath, "utf-8"));
     } catch (err) {
@@ -103,11 +144,12 @@ export async function getStaticPaths() {
     params: { role },
     props: { role, champions: matchupsKeysByRole[role], data: dataByRole[role], 
              enMap: to_en_map, imgMap: to_img_map, runeBuildMap: runeBuildData[role],
-             synergeyMaps: synergyByRole, synergyChampions: synergyKeysByRole[role], rawData: rawDataByRole[role] } // role に対応する配列を渡す
+             synergeyMaps: synergyByRole, synergyChampions: synergyKeysByRole[role],
+             oppositeMaps: oppositeByRole, oppositeChampions: oppositeKeysByRole[role], rawData: rawDataByRole[role] } // role に対応する配列を渡す
   }));
 }
 
-const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synergyChampions, rawData } = Astro.props;
+const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synergyChampions, oppositeMaps, oppositeChampions, rawData } = Astro.props;
 
 ---
 <html lang="ja">
@@ -153,6 +195,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
       const runeBuildMap = JSON.parse(runeBuildMapDiv.textContent);
       const synergyChampionsDiv = document.getElementById("synergy-champions");
       const synergyChampions = JSON.parse(synergyChampionsDiv.textContent);
+      const oppositeChampionsDiv = document.getElementById("opposite-champions");
+      const oppositeChampions = JSON.parse(oppositeChampionsDiv.textContent);
       const rawDataDiv = document.getElementById("raw-data");
       const rawData = JSON.parse(rawDataDiv.textContent);
 
@@ -267,26 +311,33 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
       });
 
       document.addEventListener("DOMContentLoaded", () => {
-        const itemsTop = document.querySelectorAll(".champ-item-top");
-        const itemsJg = document.querySelectorAll(".champ-item-jg");
-        const itemsMid = document.querySelectorAll(".champ-item-mid");
-        const itemsBot = document.querySelectorAll(".champ-item-bot");
-        const itemsSup = document.querySelectorAll(".champ-item-sup");
         let selectedTop = null;
         let selectedJg = null;
         let selectedMid = null;
         let selectedBot = null;
         let selectedSup = null;
+        let selectedOppTop = null;
+        let selectedOppJg = null;
+        let selectedOppMid = null;
+        let selectedOppBot = null;
+        let selectedOppSup = null;
 
         function scoreUpdate(){
           const synergyMapsDiv = document.getElementById("synergy-map");
           const synergyMaps = JSON.parse(synergyMapsDiv.textContent);
+          const oppositeMapsDiv = document.getElementById("opposite-map");
+          const oppositeMaps = JSON.parse(oppositeMapsDiv.textContent);
           const scoreData = {};
           let synergyTopList = [];
           let synergyMidList = [];
           let synergyJgList = [];
           let synergyBotList = [];
           let synergySupList = [];
+          let oppositeTopList = [];
+          let oppositeMidList = [];
+          let oppositeJgList = [];
+          let oppositeBotList = [];
+          let oppositeSupList = [];
 
           function sliceSynergy(map){
             let result = [];
@@ -338,6 +389,47 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               }
               const map = synergyMaps['sup'][role][mate];
               synergySupList = sliceSynergy(map)
+            }
+
+            if(selectedOppTop){
+              const opp = selectedOppTop.dataset.value;
+              if (oppositeMaps['top'][role][opp][champ]) {
+                total += parseFloat(oppositeMaps['top'][role][opp][champ]);
+              }     
+              const map = oppositeMaps['top'][role][opp];
+              oppositeTopList = sliceSynergy(map)
+            }
+            if(selectedOppJg){
+              const opp = selectedOppJg.dataset.value;
+              if (oppositeMaps['jg'][role][opp][champ]) {
+                total += parseFloat(oppositeMaps['jg'][role][opp][champ]);
+              }
+              const map = oppositeMaps['jg'][role][opp];
+              oppositeJgList = sliceSynergy(map)
+            }
+            if(selectedOppMid){
+              const opp = selectedOppMid.dataset.value;
+              if (oppositeMaps['mid'][role][opp][champ]) {
+                total += parseFloat(oppositeMaps['mid'][role][opp][champ]);
+              }
+              const map = oppositeMaps['mid'][role][opp];
+              oppositeMidList = sliceSynergy(map)
+            }
+            if(selectedOppBot){
+              const opp = selectedOppBot.dataset.value;
+              if (oppositeMaps['bot'][role][opp][champ]) {
+                total += parseFloat(oppositeMaps['bot'][role][opp][champ]);
+              }
+              const map = oppositeMaps['bot'][role][opp];
+              oppositeBotList = sliceSynergy(map)
+            }
+            if(selectedOppSup){
+              const opp = selectedOppSup.dataset.value;
+              if (oppositeMaps['sup'][role][opp][champ]) {
+                total += parseFloat(oppositeMaps['sup'][role][opp][champ]);
+              }
+              const map = oppositeMaps['sup'][role][opp];
+              oppositeSupList = sliceSynergy(map)
             }
             scoreData[champ] = total;
           }
@@ -392,6 +484,41 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                     <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
                   </a>`
               }
+              if (oppositeTopList.includes(champName)){
+                const opp = selectedOppTop.dataset.value;
+                const linkUrl = ``; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (oppositeJgList.includes(champName)){
+                const opp = selectedOppJg.dataset.value;
+                const linkUrl = ``; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (oppositeMidList.includes(champName)){
+                const opp = selectedOppMid.dataset.value;
+                const linkUrl = ``; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (oppositeBotList.includes(champName)){
+                const opp = selectedOppBot.dataset.value;
+                const linkUrl = ``; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (oppositeSupList.includes(champName)){
+                const opp = selectedOppSup.dataset.value;
+                const linkUrl = ``; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                  </a>`
+              }
 
               html += `</div>`;
               scoreCell.innerHTML = html;
@@ -400,6 +527,13 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
             }
           }
         }
+
+        
+        const itemsTop = document.querySelectorAll(".champ-item-top");
+        const itemsJg = document.querySelectorAll(".champ-item-jg");
+        const itemsMid = document.querySelectorAll(".champ-item-mid");
+        const itemsBot = document.querySelectorAll(".champ-item-bot");
+        const itemsSup = document.querySelectorAll(".champ-item-sup");
 
         itemsTop.forEach((item) => {
           item.addEventListener("click", () => {
@@ -411,6 +545,7 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
             // 新しい選択を強調
             item.classList.remove("border-transparent");
             item.classList.add("border-blue-500");
+
             selectedTop = item;
 
             scoreUpdate();
@@ -472,6 +607,89 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
             item.classList.remove("border-transparent");
             item.classList.add("border-blue-500");
             selectedSup = item;
+
+            scoreUpdate();
+          });
+        });
+        
+        const itemsOppTop = document.querySelectorAll(".opp-champ-item-top");
+        const itemsOppJg = document.querySelectorAll(".opp-champ-item-jg");
+        const itemsOppMid = document.querySelectorAll(".opp-champ-item-mid");
+        const itemsOppBot = document.querySelectorAll(".opp-champ-item-bot");
+        const itemsOppSup = document.querySelectorAll(".opp-champ-item-sup");
+        
+        itemsOppTop.forEach((item) => {
+          item.addEventListener("click", () => {
+            // 既に選択されていたアイテムのボーダーを解除
+            if (selectedOppTop) {
+              selectedOppTop.classList.remove("border-red-500");
+              selectedOppTop.classList.add("border-transparent");
+            }
+            // 新しい選択を強調
+            item.classList.remove("border-transparent");
+            item.classList.add("border-red-500");
+
+            selectedOppTop = item;
+
+            scoreUpdate();
+          });
+        });
+        itemsOppJg.forEach((item) => {
+          item.addEventListener("click", () => {
+            // 既に選択されていたアイテムのボーダーを解除
+            if (selectedOppJg) {
+              selectedOppJg.classList.remove("border-red-500");
+              selectedOppJg.classList.add("border-transparent");
+            }
+            // 新しい選択を強調
+            item.classList.remove("border-transparent");
+            item.classList.add("border-red-500");
+            selectedOppJg = item;
+
+            scoreUpdate();
+          });
+        });
+        itemsOppMid.forEach((item) => {
+          item.addEventListener("click", () => {
+            // 既に選択されていたアイテムのボーダーを解除
+            if (selectedOppMid) {
+              selectedOppMid.classList.remove("border-red-500");
+              selectedOppMid.classList.add("border-transparent");
+            }
+            // 新しい選択を強調
+            item.classList.remove("border-transparent");
+            item.classList.add("border-red-500");
+            selectedOppMid = item;
+
+            scoreUpdate();
+          });
+        });
+        itemsOppBot.forEach((item) => {
+          item.addEventListener("click", () => {
+            // 既に選択されていたアイテムのボーダーを解除
+            if (selectedOppBot) {
+              selectedOppBot.classList.remove("border-red-500");
+              selectedOppBot.classList.add("border-transparent");
+            }
+            // 新しい選択を強調
+            item.classList.remove("border-transparent");
+            item.classList.add("border-red-500");
+            selectedOppBot = item;
+
+            scoreUpdate();
+          });
+        });
+        itemsOppSup.forEach((item) => {
+          item.addEventListener("click", () => {
+            // 既に選択されていたアイテムのボーダーを解除
+            if (selectedOppSup) {
+              selectedOppSup.classList.remove("border-red-500");
+              selectedOppSup.classList.add("border-transparent");
+            }
+            // 新しい選択を強調
+            item.classList.remove("border-transparent");
+            item.classList.add("border-red-500");
+            selectedOppSup = item;
 
             scoreUpdate();
           });
@@ -759,6 +977,213 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
         }
       </CollapsibleSection>
     </div>
+    <div class="block mt-[0.5vh]"> 
+      <CollapsibleSection title="敵チームチャンピオン一覧">
+        {role !== 'top' &&
+          <div class="col-span-1">
+            <h2>Top</h2>
+            <ul id="champion-list" class="flex flex-wrap justify-center items-center gap-x-[5px] gap-y-[5px] overflow-scroll bg-gray-100 p-4 text-base border rounded h-[36vh]">
+              {oppositeChampions['top'].slice() // 元配列を壊さないようコピー
+                        .sort((a, b) => a.localeCompare(b, "ja")) // 日本語に対応した昇順ソート
+                        .map(c => {
+                          if (!(c in imgMap)) {
+                            return (
+                              <li>
+                                <button
+                                  type="button"
+                                  data-value={c}
+                                  class="opp-champ-item-top flex flex-col items-center border-13 lg:border-4 border-transparent rounded-2xl hover:border-red-400 transition transform hover:scale-105 focus:outline-none"
+                                >
+                                  {c}
+                                </button>
+                              </li> 
+                            );
+                          } else {
+                            return (
+                              <li>
+                                <button
+                                  type="button"
+                                  data-value={c}
+                                  class="opp-champ-item-top flex flex-col items-center border-13 lg:border-4 border-transparent rounded-2xl hover:border-red-400 transition transform hover:scale-105 focus:outline-none"
+                                >
+                                  <img 
+                                    src={imgMap[c]['icon']}
+                                    alt={c}
+                                    class="w-[100px] h-[100px] lg:w-[64px] lg:h-[64px] object-contain"
+                                  />
+                                  <span class="text-4xl lg:text-base">{c}</span>
+                                </button>
+                              </li>
+                          );}
+              })}
+            </ul>
+          </div>
+        }
+        {role !== 'jg' &&
+          <div class="col-span-1">
+            <h2>Jg</h2>
+            <ul id="champion-list" class="flex flex-wrap justify-center items-center gap-x-[5px] gap-y-[5px] h-[20%] overflow-scroll bg-gray-100 p-4 text-base border rounded h-[36vh]">
+              {oppositeChampions['jg'].slice() // 元配列を壊さないようコピー
+                        .sort((a, b) => a.localeCompare(b, "ja")) // 日本語に対応した昇順ソート
+                        .map(c => {
+                          if (!(c in imgMap)) {
+                            return (
+                              <li>
+                                <button
+                                  type="button"
+                                  data-value={c}
+                                  class="opp-champ-item-jg flex flex-col items-center border-13 lg:border-4 border-transparent rounded-2xl hover:border-red-400 transition transform hover:scale-105 focus:outline-none"
+                                >
+                                  {c}
+                                </button>
+                              </li> 
+                            );
+                          } else {
+                            return (
+                              <li>
+                                <button
+                                  type="button"
+                                  data-value={c}
+                                  class="opp-champ-item-jg flex flex-col items-center border-13 lg:border-4 border-transparent rounded-2xl hover:border-red-400 transition transform hover:scale-105 focus:outline-none"
+                                >
+                                  <img 
+                                    src={imgMap[c]['icon']}
+                                    alt={c}
+                                    class="w-[100px] h-[100px] lg:w-[64px] lg:h-[64px] object-contain"
+                                  />
+                                  <span class="text-4xl lg:text-base">{c}</span>
+                                </button>
+                              </li>
+                          );}
+              })}
+            </ul>
+          </div>
+        }
+        {role !== 'mid' &&
+          <div class="col-span-1">
+            <h2>Mid</h2>
+            <ul id="champion-list" class="flex flex-wrap justify-center items-center gap-x-[5px] gap-y-[5px] h-[20%] overflow-scroll bg-gray-100 p-4 text-base border rounded h-[36vh]">
+              {oppositeChampions['mid'].slice() // 元配列を壊さないようコピー
+                        .sort((a, b) => a.localeCompare(b, "ja")) // 日本語に対応した昇順ソート
+                        .map(c => {
+                          if (!(c in imgMap)) {
+                            return (
+                              <li>
+                                <button
+                                  type="button"
+                                  data-value={c}
+                                  class="opp-champ-item-mid flex flex-col items-center border-13 lg:border-4 border-transparent rounded-2xl hover:border-red-400 transition transform hover:scale-105 focus:outline-none"
+                                >
+                                  {c}
+                                </button>
+                              </li> 
+                            );
+                          } else {
+                            return (
+                              <li>
+                                <button
+                                  type="button"
+                                  data-value={c}
+                                  class="opp-champ-item-mid flex flex-col items-center border-13 lg:border-4 border-transparent rounded-2xl hover:border-red-400 transition transform hover:scale-105 focus:outline-none"
+                                >
+                                  <img 
+                                    src={imgMap[c]['icon']}
+                                    alt={c}
+                                    class="w-[100px] h-[100px] lg:w-[64px] lg:h-[64px] object-contain"
+                                  />
+                                  <span class="text-4xl lg:text-base">{c}</span>
+                                </button>
+                                
+                              </li>
+                          );}
+              })}
+            </ul>
+          </div>
+        }
+        {role !== 'bot' &&
+          <div class="col-span-1">
+            <h2>Bot</h2>
+            <ul id="champion-list" class="flex flex-wrap justify-center items-center gap-x-[5px] gap-y-[5px] h-[20%] overflow-scroll bg-gray-100 p-4 text-base border rounded h-[36vh]">
+              {oppositeChampions['bot'].slice() // 元配列を壊さないようコピー
+                        .sort((a, b) => a.localeCompare(b, "ja")) // 日本語に対応した昇順ソート
+                        .map(c => {
+                          if (!(c in imgMap)) {
+                            return (
+                              <li>
+                                <button
+                                  type="button"
+                                  data-value={c}
+                                  class="opp-champ-item-bot flex flex-col items-center border-13 lg:border-4 border-transparent rounded-2xl hover:border-red-400 transition transform hover:scale-105 focus:outline-none"
+                                >
+                                  {c}
+                                </button>
+                              </li> 
+                            );
+                          } else {
+                            return (
+                              <li>
+                                <button
+                                  type="button"
+                                  data-value={c}
+                                  class="opp-champ-item-bot flex flex-col items-center border-13 lg:border-4 border-transparent rounded-2xl hover:border-red-400 transition transform hover:scale-105 focus:outline-none"
+                                >
+                                  <img 
+                                    src={imgMap[c]['icon']}
+                                    alt={c}
+                                    class="w-[100px] h-[100px] lg:w-[64px] lg:h-[64px] object-contain"
+                                  />
+                                  <span class="text-4xl lg:text-base">{c}</span>
+                                </button>
+                                
+                              </li>
+                          );}
+              })}
+            </ul>
+          </div>
+        }
+        {role !== 'sup' &&
+          <div class="col-span-1">
+            <h2>Sup</h2>
+            <ul id="champion-list" class="flex flex-wrap justify-center items-center gap-x-[5px] gap-y-[5px] h-[20%] overflow-scroll bg-gray-100 p-4 text-base border rounded h-[36vh]">
+              {oppositeChampions['sup'].slice() // 元配列を壊さないようコピー
+                        .sort((a, b) => a.localeCompare(b, "ja")) // 日本語に対応した昇順ソート
+                        .map(c => {
+                          if (!(c in imgMap)) {
+                            return (
+                              <li>
+                                <button
+                                  type="button"
+                                  data-value={c}
+                                  class="opp-champ-item-sup flex flex-col items-center border-13 lg:border-4 border-transparent rounded-2xl hover:border-red-400 transition transform hover:scale-105 focus:outline-none"
+                                >
+                                  {c}
+                                </button>
+                              </li> 
+                            );
+                          } else {
+                            return (
+                              <li>
+                                <button
+                                  type="button"
+                                  data-value={c}
+                                  class="opp-champ-item-sup flex flex-col items-center border-13 lg:border-4 border-transparent rounded-2xl hover:border-red-400 transition transform hover:scale-105 focus:outline-none"
+                                >
+                                  <img 
+                                    src={imgMap[c]['icon']}
+                                    alt={c}
+                                    class="w-[100px] h-[100px] lg:w-[64px] lg:h-[64px] object-contain"
+                                  />
+                                  <span class="text-4xl lg:text-base">{c}</span>
+                                </button>
+                                
+                              </li>
+                          );}
+              })}
+            </ul>
+          </div>
+        }
+      </CollapsibleSection>
+    </div>
     <div class="flex-col lg:flex-row flex">
       <!-- 左側：チャンピオン一覧 -->
       <div class="w-full h-[50vh] lg:w-1/2 lg:h-[100vh] overflow-y-scroll bg-gray-50 border rounded p-4">
@@ -887,6 +1312,14 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
     <!-- 埋め込みデータ -->
     <div id="synergy-champions" class="hidden">
       {JSON.stringify(synergyChampions)}
+    </div>
+    <!-- 埋め込みデータ -->
+    <div id="opposite-map" class="hidden">
+      {JSON.stringify(oppositeMaps)}
+    </div>
+    <!-- 埋め込みデータ -->
+    <div id="opposite-champions" class="hidden">
+      {JSON.stringify(oppositeChampions)}
     </div>
     <!-- 埋め込みデータ -->
     <div id="raw-data" class="hidden">
