@@ -328,23 +328,41 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
           const oppositeMapsDiv = document.getElementById("opposite-map");
           const oppositeMaps = JSON.parse(oppositeMapsDiv.textContent);
           const scoreData = {};
-          let synergyTopList = [];
-          let synergyMidList = [];
-          let synergyJgList = [];
-          let synergyBotList = [];
-          let synergySupList = [];
-          let oppositeTopList = [];
-          let oppositeMidList = [];
-          let oppositeJgList = [];
-          let oppositeBotList = [];
-          let oppositeSupList = [];
+          let synergyTopListGood = [];
+          let synergyMidListGood = [];
+          let synergyJgListGood = [];
+          let synergyBotListGood = [];
+          let synergySupListGood = [];
+          let synergyTopListBad = [];
+          let synergyMidListBad = [];
+          let synergyJgListBad = [];
+          let synergyBotListBad = [];
+          let synergySupListBad = [];
+          let oppositeTopListGood = [];
+          let oppositeMidListGood = [];
+          let oppositeJgListGood = [];
+          let oppositeBotListGood = [];
+          let oppositeSupListGood = [];
+          let oppositeTopListBad = [];
+          let oppositeMidListBad = [];
+          let oppositeJgListBad = [];
+          let oppositeBotListBad = [];
+          let oppositeSupListBad = [];
 
-          function sliceSynergy(map){
+          function sliceSynergyGood(map){
             let result = [];
             const sorted = Object.entries(map).sort((a, b) => b[1] - a[1]);
             const top5 = sorted.slice(0, 5);
             const bottom5 = sorted.slice(-5);
-            result = result.concat(top5).concat(bottom5).map((a)=>a[0]);
+            result = result.concat(top5).map((a)=>a[0]);
+            return result;
+          }
+          function sliceSynergyBad(map){
+            let result = [];
+            const sorted = Object.entries(map).sort((a, b) => b[1] - a[1]);
+            const top5 = sorted.slice(0, 5);
+            const bottom5 = sorted.slice(-5);
+            result = result.concat(bottom5).map((a)=>a[0]);
             return result;
           }
 
@@ -356,7 +374,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                 total += parseFloat(synergyMaps['top'][role][mate][champ]);
               }     
               const map = synergyMaps['top'][role][mate];
-              synergyTopList = sliceSynergy(map)
+              synergyTopListGood = sliceSynergyGood(map);
+              synergyTopListBad = sliceSynergyBad(map);
             }
             if(selectedJg){
               const mate = selectedJg.dataset.value;
@@ -364,7 +383,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                 total += parseFloat(synergyMaps['jg'][role][mate][champ]);
               }
               const map = synergyMaps['jg'][role][mate];
-              synergyJgList = sliceSynergy(map)
+              synergyJgListGood = sliceSynergyGood(map);
+              synergyJgListBad = sliceSynergyBad(map);
             }
             if(selectedMid){
               const mate = selectedMid.dataset.value;
@@ -372,7 +392,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                 total += parseFloat(synergyMaps['mid'][role][mate][champ]);
               }
               const map = synergyMaps['mid'][role][mate];
-              synergyMidList = sliceSynergy(map)
+              synergyMidListGood = sliceSynergyGood(map);
+              synergyMidListBad = sliceSynergyBad(map);
             }
             if(selectedBot){
               const mate = selectedBot.dataset.value;
@@ -380,7 +401,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                 total += parseFloat(synergyMaps['bot'][role][mate][champ]);
               }
               const map = synergyMaps['bot'][role][mate];
-              synergyBotList = sliceSynergy(map)
+              synergyBotListGood = sliceSynergyGood(map);
+              synergyBotListBad = sliceSynergyBad(map);
             }
             if(selectedSup){
               const mate = selectedSup.dataset.value;
@@ -388,7 +410,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                 total += parseFloat(synergyMaps['sup'][role][mate][champ]);
               }
               const map = synergyMaps['sup'][role][mate];
-              synergySupList = sliceSynergy(map)
+              synergySupListGood = sliceSynergyGood(map);
+              synergySupListBad = sliceSynergyBad(map);
             }
 
             if(selectedOppTop){
@@ -397,7 +420,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                 total += parseFloat(oppositeMaps['top'][role][opp][champ]);
               }     
               const map = oppositeMaps['top'][role][opp];
-              oppositeTopList = sliceSynergy(map)
+              oppositeTopListGood = sliceSynergyGood(map);
+              oppositeTopListBad = sliceSynergyBad(map);
             }
             if(selectedOppJg){
               const opp = selectedOppJg.dataset.value;
@@ -405,7 +429,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                 total += parseFloat(oppositeMaps['jg'][role][opp][champ]);
               }
               const map = oppositeMaps['jg'][role][opp];
-              oppositeJgList = sliceSynergy(map)
+              oppositeJgListGood = sliceSynergyGood(map);
+              oppositeJgListBad = sliceSynergyBad(map);
             }
             if(selectedOppMid){
               const opp = selectedOppMid.dataset.value;
@@ -413,7 +438,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                 total += parseFloat(oppositeMaps['mid'][role][opp][champ]);
               }
               const map = oppositeMaps['mid'][role][opp];
-              oppositeMidList = sliceSynergy(map)
+              oppositeMidListGood = sliceSynergyGood(map);
+              oppositeMidListBad = sliceSynergyBad(map);
             }
             if(selectedOppBot){
               const opp = selectedOppBot.dataset.value;
@@ -421,7 +447,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                 total += parseFloat(oppositeMaps['bot'][role][opp][champ]);
               }
               const map = oppositeMaps['bot'][role][opp];
-              oppositeBotList = sliceSynergy(map)
+              oppositeBotListGood = sliceSynergyGood(map);
+              oppositeBotListBad = sliceSynergyBad(map);
             }
             if(selectedOppSup){
               const opp = selectedOppSup.dataset.value;
@@ -429,7 +456,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                 total += parseFloat(oppositeMaps['sup'][role][opp][champ]);
               }
               const map = oppositeMaps['sup'][role][opp];
-              oppositeSupList = sliceSynergy(map)
+              oppositeSupListGood = sliceSynergyGood(map);
+              oppositeSupListBad = sliceSynergyBad(map);
             }
             scoreData[champ] = total;
           }
@@ -449,74 +477,144 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               let html = `
                 <div class="flex">
                   <span>${score}</span>`
-              if (synergyTopList.includes(champName)){
+              if (synergyTopListGood.includes(champName)){
                 const mate = selectedTop.dataset.value;
                 const linkUrl = `/top/${mate}/${role}/${champName}`; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
-                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-blue-500" style="vertical-align:middle;">
                   </a>`
               }
-              if (synergyMidList.includes(champName)){
+              if (synergyMidListGood.includes(champName)){
                 const mate = selectedMid.dataset.value;
                 const linkUrl = `/mid/${mate}/${role}/${champName}`; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
-                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-blue-500" style="vertical-align:middle;">
                   </a>`
               }
-              if (synergyJgList.includes(champName)){
+              if (synergyJgListGood.includes(champName)){
                 const mate = selectedJg.dataset.value;
                 const linkUrl = `/jg/${mate}/${role}/${champName}`; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
-                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-blue-500" style="vertical-align:middle;">
                   </a>`
               }
-              if (synergyBotList.includes(champName)){
+              if (synergyBotListGood.includes(champName)){
                 const mate = selectedBot.dataset.value;
                 const linkUrl = `/bot/${mate}/${role}/${champName}`; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
-                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-blue-500" style="vertical-align:middle;">
                   </a>`
               }
-              if (synergySupList.includes(champName)){
+              if (synergySupListGood.includes(champName)){
                 const mate = selectedSup.dataset.value;
                 const linkUrl = `/sup/${mate}/${role}/${champName}`; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
-                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-blue-500" style="vertical-align:middle;">
                   </a>`
               }
-              if (oppositeTopList.includes(champName)){
+              if (synergyTopListBad.includes(champName)){
+                const mate = selectedTop.dataset.value;
+                const linkUrl = `/top/${mate}/${role}/${champName}`; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-red-500" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (synergyMidListBad.includes(champName)){
+                const mate = selectedMid.dataset.value;
+                const linkUrl = `/mid/${mate}/${role}/${champName}`; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-red-500" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (synergyJgListBad.includes(champName)){
+                const mate = selectedJg.dataset.value;
+                const linkUrl = `/jg/${mate}/${role}/${champName}`; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-red-500" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (synergyBotListBad.includes(champName)){
+                const mate = selectedBot.dataset.value;
+                const linkUrl = `/bot/${mate}/${role}/${champName}`; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-red-500" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (synergySupListBad.includes(champName)){
+                const mate = selectedSup.dataset.value;
+                const linkUrl = `/sup/${mate}/${role}/${champName}`; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[mate].icon}" alt="${mate}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-red-500" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (oppositeTopListGood.includes(champName)){
                 const opp = selectedOppTop.dataset.value;
                 const linkUrl = ``; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
-                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-blue-500" style="vertical-align:middle;">
                   </a>`
               }
-              if (oppositeJgList.includes(champName)){
+              if (oppositeJgListGood.includes(champName)){
                 const opp = selectedOppJg.dataset.value;
                 const linkUrl = ``; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
-                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-blue-500" style="vertical-align:middle;">
                   </a>`
               }
-              if (oppositeMidList.includes(champName)){
+              if (oppositeMidListGood.includes(champName)){
                 const opp = selectedOppMid.dataset.value;
                 const linkUrl = ``; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
-                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-blue-500" style="vertical-align:middle;">
                   </a>`
               }
-              if (oppositeBotList.includes(champName)){
+              if (oppositeBotListGood.includes(champName)){
                 const opp = selectedOppBot.dataset.value;
                 const linkUrl = ``; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
-                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-blue-500" style="vertical-align:middle;">
                   </a>`
               }
-              if (oppositeSupList.includes(champName)){
+              if (oppositeSupListGood.includes(champName)){
                 const opp = selectedOppSup.dataset.value;
                 const linkUrl = ``; 
                 html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
-                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px]" style="vertical-align:middle;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-blue-500" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (oppositeTopListBad.includes(champName)){
+                const opp = selectedOppTop.dataset.value;
+                const linkUrl = ``; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-red-500" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (oppositeJgListBad.includes(champName)){
+                const opp = selectedOppJg.dataset.value;
+                const linkUrl = ``; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-red-500" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (oppositeMidListBad.includes(champName)){
+                const opp = selectedOppMid.dataset.value;
+                const linkUrl = ``; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-red-500" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (oppositeBotListBad.includes(champName)){
+                const opp = selectedOppBot.dataset.value;
+                const linkUrl = ``; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-red-500" style="vertical-align:middle;">
+                  </a>`
+              }
+              if (oppositeSupListBad.includes(champName)){
+                const opp = selectedOppSup.dataset.value;
+                const linkUrl = ``; 
+                html += `<a href="${linkUrl}" target="_blank" style="margin-left:6px;">
+                    <img src="${imgMap[opp].icon}" alt="${opp}" class="w-[64px] h-[64px] lg:w-[24px] lg:h-[24px] border-2 border-red-500" style="vertical-align:middle;">
                   </a>`
               }
 
