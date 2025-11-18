@@ -30,6 +30,24 @@ export async function getStaticPaths() {
 
   const rawDataByRole: Record<string, any> = {};
 
+  let allSynergeyDataRaw: Record<string, any>;
+  try {
+      const synergeyFilePath = `./src/data/synergy_data.json`;
+      allSynergeyDataRaw = JSON.parse(fs.readFileSync(synergeyFilePath, "utf-8"));
+  } catch (err) {
+    synergeyDataRaw = {'top':{}, 'mid':{}, 'jg':{}, 'bot':{}, 'sup':{}};
+    console.warn(`synergy_data.json が読み込めません:`, err);
+  }
+
+  let allOppositeDataRaw: Record<string, any>;
+  try {
+      const oppositeFilePath = `./src/data/opposite_data.json`;
+      allOppositeDataRaw = JSON.parse(fs.readFileSync(oppositeFilePath, "utf-8"));
+    } catch (err) {
+    allOppositeDataRaw = {'top':{}, 'mid':{}, 'jg':{}, 'bot':{}, 'sup':{}};
+      console.warn(`opposite_data.json が読み込めません:`, err);
+    }
+
   for (const role of roles) {
     try {
       const filePath = `./src/data/${role}_matchups.json`;
@@ -55,80 +73,54 @@ export async function getStaticPaths() {
       console.warn(`${role}_rune_build.json が読み込めません:`, err);
     }
 
-    try {
-      const synergeyFilePath = `./src/data/${role}_synergy.json`;
-      const synergeyDataRaw: Record<string, any> = JSON.parse(fs.readFileSync(synergeyFilePath, "utf-8"));
-      for (const champ of Object.keys(synergeyDataRaw)) {
-        if (synergeyDataRaw[champ]["game_count"] < 14000) {
-          delete synergeyDataRaw[champ];
+    const synergeyDataRaw: Record<string, any> = allSynergeyDataRaw[role];
+    const synergeyData: Record<string, any> = {};
+    for (const champ of Object.keys(synergeyDataRaw)) {
+      for (const pos of Object.keys(synergeyDataRaw[champ])) {
+        if (!(pos in synergeyData)) {
+          synergeyData[pos] = {};
         }
-      }
-      const synergeyData: Record<string, any> = {};
-      const pos_key_set: Record<string, any> = {};
-      for (const champ of Object.keys(synergeyDataRaw)) {
-        for (const pos of Object.keys(synergeyDataRaw[champ])) {
-          if (!(pos in synergeyData)) {
-            synergeyData[pos] = {};
+        for (const mate of Object.keys(synergeyDataRaw[champ][pos])) {
+          if (!(champ in synergeyData[pos])) {
+            synergeyData[pos][champ] = {};
           }
-          for (const mate of Object.keys(synergeyDataRaw[champ][pos])) {
-            if (!(champ in synergeyData[pos])) {
-              synergeyData[pos][champ] = {};
-            }
-            synergeyData[pos][champ][mate] = synergeyDataRaw[champ][pos][mate];
-          }
+          synergeyData[pos][champ][mate] = synergeyDataRaw[champ][pos][mate];
         }
       }
-      synergyByRole[role] = synergeyData;
-      synergyKeysByRole[role] = {'top':new Set(), 'mid':new Set(), 'jg':new Set(), 'bot':new Set(), 'sup':new Set()};
-      for (const pos of Object.keys(synergeyData)) {
-        for (const champ of Object.keys(synergeyData[pos])) {
-          const list: string[] = Object.keys(synergeyData[pos][champ]);
-          synergyKeysByRole[role][pos] = new Set([...synergyKeysByRole[role][pos], ...new Set(list)]); ;
-        }
-        synergyKeysByRole[role][pos] = Array.from(synergyKeysByRole[role][pos])
+    }
+    synergyByRole[role] = synergeyData;
+    synergyKeysByRole[role] = {'top':new Set(), 'mid':new Set(), 'jg':new Set(), 'bot':new Set(), 'sup':new Set()};
+    for (const pos of Object.keys(synergeyData)) {
+      for (const champ of Object.keys(synergeyData[pos])) {
+        const list: string[] = Object.keys(synergeyData[pos][champ]);
+        synergyKeysByRole[role][pos] = new Set([...synergyKeysByRole[role][pos], ...new Set(list)]); ;
       }
-    } catch (err) {
-      synergyByRole[role] = {};
-      synergyKeysByRole[role] = {'top':[], 'mid':[], 'jg':[], 'bot':[], 'sup':[]};
-      console.warn(`${role}_synergy.json が読み込めません:`, err);
+      synergyKeysByRole[role][pos] = Array.from(synergyKeysByRole[role][pos])
     }
 
-    try {
-      const oppositeFilePath = `./src/data/${role}_opposite_data.json`;
-      const oppositeDataRaw: Record<string, any> = JSON.parse(fs.readFileSync(oppositeFilePath, "utf-8"));
-      for (const champ of Object.keys(oppositeDataRaw)) {
-        if (oppositeDataRaw[champ]["game_count"] < 14000) {
-          delete oppositeDataRaw[champ];
+    const oppositeDataRaw: Record<string, any> = allOppositeDataRaw[role];
+    const oppositeData: Record<string, any> = {};
+    for (const champ of Object.keys(oppositeDataRaw)) {
+      for (const pos of Object.keys(oppositeDataRaw[champ])) {
+        if (!(pos in oppositeData)) {
+          oppositeData[pos] = {};
         }
-      }
-      const oppositeData: Record<string, any> = {};
-      const pos_key_set: Record<string, any> = {};
-      for (const champ of Object.keys(oppositeDataRaw)) {
-        for (const pos of Object.keys(oppositeDataRaw[champ])) {
-          if (!(pos in oppositeData)) {
-            oppositeData[pos] = {};
+        for (const opp of Object.keys(oppositeDataRaw[champ][pos])) {
+          if (!(champ in oppositeData[pos])) {
+            oppositeData[pos][champ] = {};
           }
-          for (const opp of Object.keys(oppositeDataRaw[champ][pos])) {
-            if (!(champ in oppositeData[pos])) {
-              oppositeData[pos][champ] = {};
-            }
-            oppositeData[pos][champ][opp] = oppositeDataRaw[champ][pos][opp];
-          }
+          oppositeData[pos][champ][opp] = oppositeDataRaw[champ][pos][opp];
         }
       }
-      oppositeByRole[role] = oppositeData;
-      oppositeKeysByRole[role] = {'top':new Set(), 'mid':new Set(), 'jg':new Set(), 'bot':new Set(), 'sup':new Set()};
-      for (const pos of Object.keys(oppositeData)) {
-        for (const champ of Object.keys(oppositeData[pos])) {
-          const list: string[] = Object.keys(oppositeData[pos][champ]);
-          oppositeKeysByRole[role][pos] = new Set([...oppositeKeysByRole[role][pos], ...new Set(list)]); ;
-        }
-        oppositeKeysByRole[role][pos] = Array.from(oppositeKeysByRole[role][pos])
+    }
+    oppositeByRole[role] = oppositeData;
+    oppositeKeysByRole[role] = {'top':new Set(), 'mid':new Set(), 'jg':new Set(), 'bot':new Set(), 'sup':new Set()};
+    for (const pos of Object.keys(oppositeData)) {
+      for (const champ of Object.keys(oppositeData[pos])) {
+        const list: string[] = Object.keys(oppositeData[pos][champ]);
+        oppositeKeysByRole[role][pos] = new Set([...oppositeKeysByRole[role][pos], ...new Set(list)]); ;
       }
-    } catch (err) {
-      oppositeByRole[role] = {};
-      oppositeKeysByRole[role] = {'top':[], 'mid':[], 'jg':[], 'bot':[], 'sup':[]};
-      console.warn(`${role}_opposite.json が読み込めません:`, err);
+      oppositeKeysByRole[role][pos] = Array.from(oppositeKeysByRole[role][pos])
     }
 
     try {
@@ -368,10 +360,13 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
 
           for (const champ of roleDataKey){
             let total = 0;
+            let values = [];
             if(selectedTop){
               const mate = selectedTop.dataset.value;
               if (synergyMaps['top'][role][mate][champ]) {
                 total += parseFloat(synergyMaps['top'][role][mate][champ]);
+                values.push(synergyMaps['top'][role][mate][champ]);
+                values.push(parseFloat(synergyMaps['top'][role][mate][champ]));
               }     
               const map = synergyMaps['top'][role][mate];
               synergyTopListGood = sliceSynergyGood(map);
@@ -381,6 +376,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               const mate = selectedJg.dataset.value;
               if (synergyMaps['jg'][role][mate][champ]) {
                 total += parseFloat(synergyMaps['jg'][role][mate][champ]);
+                values.push(synergyMaps['jg'][role][mate][champ]);
+                values.push(parseFloat(synergyMaps['jg'][role][mate][champ]));
               }
               const map = synergyMaps['jg'][role][mate];
               synergyJgListGood = sliceSynergyGood(map);
@@ -390,6 +387,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               const mate = selectedMid.dataset.value;
               if (synergyMaps['mid'][role][mate][champ]) {
                 total += parseFloat(synergyMaps['mid'][role][mate][champ]);
+                values.push(synergyMaps['mid'][role][mate][champ]);
+                values.push(parseFloat(synergyMaps['mid'][role][mate][champ]));
               }
               const map = synergyMaps['mid'][role][mate];
               synergyMidListGood = sliceSynergyGood(map);
@@ -399,6 +398,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               const mate = selectedBot.dataset.value;
               if (synergyMaps['bot'][role][mate][champ]) {
                 total += parseFloat(synergyMaps['bot'][role][mate][champ]);
+                values.push(synergyMaps['bot'][role][mate][champ]);
+                values.push(parseFloat(synergyMaps['bot'][role][mate][champ]));
               }
               const map = synergyMaps['bot'][role][mate];
               synergyBotListGood = sliceSynergyGood(map);
@@ -408,6 +409,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               const mate = selectedSup.dataset.value;
               if (synergyMaps['sup'][role][mate][champ]) {
                 total += parseFloat(synergyMaps['sup'][role][mate][champ]);
+                values.push(synergyMaps['sup'][role][mate][champ]);
+                values.push(parseFloat(synergyMaps['sup'][role][mate][champ]));
               }
               const map = synergyMaps['sup'][role][mate];
               synergySupListGood = sliceSynergyGood(map);
@@ -418,6 +421,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               const opp = selectedOppTop.dataset.value;
               if (oppositeMaps['top'][role][opp][champ]) {
                 total += parseFloat(oppositeMaps['top'][role][opp][champ]);
+                values.push(oppositeMaps['top'][role][opp][champ]);
+                values.push(parseFloat(oppositeMaps['top'][role][opp][champ]));
               }     
               const map = oppositeMaps['top'][role][opp];
               oppositeTopListGood = sliceSynergyGood(map);
@@ -427,6 +432,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               const opp = selectedOppJg.dataset.value;
               if (oppositeMaps['jg'][role][opp][champ]) {
                 total += parseFloat(oppositeMaps['jg'][role][opp][champ]);
+                values.push(oppositeMaps['jg'][role][opp][champ]);
+                values.push(parseFloat(oppositeMaps['jg'][role][opp][champ]));
               }
               const map = oppositeMaps['jg'][role][opp];
               oppositeJgListGood = sliceSynergyGood(map);
@@ -436,6 +443,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               const opp = selectedOppMid.dataset.value;
               if (oppositeMaps['mid'][role][opp][champ]) {
                 total += parseFloat(oppositeMaps['mid'][role][opp][champ]);
+                values.push(oppositeMaps['mid'][role][opp][champ]);
+                values.push(parseFloat(oppositeMaps['mid'][role][opp][champ]));
               }
               const map = oppositeMaps['mid'][role][opp];
               oppositeMidListGood = sliceSynergyGood(map);
@@ -445,6 +454,8 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               const opp = selectedOppBot.dataset.value;
               if (oppositeMaps['bot'][role][opp][champ]) {
                 total += parseFloat(oppositeMaps['bot'][role][opp][champ]);
+                values.push(oppositeMaps['bot'][role][opp][champ]);
+                values.push(parseFloat(oppositeMaps['bot'][role][opp][champ]));
               }
               const map = oppositeMaps['bot'][role][opp];
               oppositeBotListGood = sliceSynergyGood(map);
@@ -454,12 +465,16 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               const opp = selectedOppSup.dataset.value;
               if (oppositeMaps['sup'][role][opp][champ]) {
                 total += parseFloat(oppositeMaps['sup'][role][opp][champ]);
+                values.push(oppositeMaps['sup'][role][opp][champ]);
+                values.push(parseFloat(oppositeMaps['sup'][role][opp][champ]));
               }
               const map = oppositeMaps['sup'][role][opp];
               oppositeSupListGood = sliceSynergyGood(map);
               oppositeSupListBad = sliceSynergyBad(map);
             }
             scoreData[champ] = total;
+            console.log(champ);
+            console.log(values);
           }
           
           const table = document.getElementById("champion-table");
