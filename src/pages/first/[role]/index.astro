@@ -28,6 +28,8 @@ export async function getStaticPaths() {
   const oppositeByRole: Record<string, any> = {};
   const oppositeKeysByRole: Record<string, any> = {};
 
+  const synergeyRiskByRole: Record<string, any> = {};
+
   const rawDataByRole: Record<string, any> = {};
 
   let allSynergeyDataRaw: Record<string, any>;
@@ -130,6 +132,45 @@ export async function getStaticPaths() {
       rawDataByRole[role] = {};
       console.warn(`${role}_raw_data.json が読み込めません:`, err);
     }
+    
+    const synergeyRiskData: Record<string, any> = {};
+    for (const champ of Object.keys(synergeyDataRaw)) {
+      for (const pos of Object.keys(synergeyDataRaw[champ])) {
+        for (const mate of Object.keys(synergeyDataRaw[champ][pos])) {
+          if (!(champ in synergeyRiskData)) {
+            synergeyRiskData[champ] = [];
+          }
+          synergeyRiskData[champ].push(synergeyDataRaw[champ][pos][mate]);
+        }
+      }
+    }
+    for (const champ of Object.keys(oppositeDataRaw)) {
+      for (const pos of Object.keys(oppositeDataRaw[champ])) {
+        for (const opp of Object.keys(oppositeDataRaw[champ][pos])) {
+          if (!(champ in synergeyRiskData)) {
+            synergeyRiskData[champ] = [];
+          }
+          synergeyRiskData[champ].push(oppositeDataRaw[champ][pos][opp]);
+        }
+      }
+    }
+    const synergeyStdData: Record<string, any> = {};
+    for (const champ of Object.keys(synergeyRiskData)) {
+      const average = synergeyRiskData[champ].reduce((previous, current) =>
+          previous + current  // 前の要素につぎの要素を足す
+      ) / synergeyRiskData[champ].length;  // 要素数で割る
+      const squaredDifference = synergeyRiskData[champ].map((current) => {
+          const difference = current - average;  // 平均値との差を求める
+          return difference ** 2;  // 差を2乘する
+      });
+      const variance = squaredDifference.reduce((previous, current) =>
+          previous + current  // 前の要素につぎの要素を足す
+      ) / squaredDifference.length;  // 要素数で割る
+      const standardDeviation = Math.sqrt(variance);
+      synergeyStdData[champ] = standardDeviation;
+    }
+    synergeyRiskByRole[role] = synergeyStdData;
+
   }
 
   return roles.map((role) => ({
@@ -137,11 +178,13 @@ export async function getStaticPaths() {
     props: { role, champions: matchupsKeysByRole[role], data: dataByRole[role], 
              enMap: to_en_map, imgMap: to_img_map, runeBuildMap: runeBuildData[role],
              synergeyMaps: synergyByRole, synergyChampions: synergyKeysByRole[role],
-             oppositeMaps: oppositeByRole, oppositeChampions: oppositeKeysByRole[role], rawData: rawDataByRole[role] } // role に対応する配列を渡す
+             oppositeMaps: oppositeByRole, oppositeChampions: oppositeKeysByRole[role], rawData: rawDataByRole[role],
+             synergeyRiskMaps: synergeyRiskByRole[role] } // role に対応する配列を渡す
   }));
 }
 
-const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synergyChampions, oppositeMaps, oppositeChampions, rawData } = Astro.props;
+
+const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synergyChampions, oppositeMaps, oppositeChampions, rawData, synergeyRiskMaps } = Astro.props;
 
 ---
 <html lang="ja">
@@ -1324,12 +1367,13 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
               <th class="border p-2 text-center cursor-pointer text-4xl lg:text-base" title="LoLalyticsの勝率">勝率</th>
               <th class="border p-2 text-center cursor-pointer text-4xl lg:text-base" title="不利対面時の最低勝率を示します。すくなくともこの勝率は保証されていると解釈できます。">最悪勝率</th>
               <th class="border p-2 text-center cursor-pointer text-4xl lg:text-base" title="自チームチャンプとのsynergy delta2の総和です。">シナジー</th>
+              <th class="border p-2 text-center cursor-pointer text-4xl lg:text-base" title="シナジースコアの安定性です。値が大きいほどシナジーが変動しやすい。">シナジーリスク</th>
             </tr>
           </thead>
           <tbody id="champion-list">
             {champions
               .slice()
-              .filter((a)=>data[a]['game_count']>=14000)
+              .filter((a)=>data[a]['game_count']>=10000)
               .sort((a, b) => a.localeCompare(b, "ja"))
               .map((c) => {
                 const info = data[c] || {}; // ← 各チャンピオンの追加データをここで参照
@@ -1375,6 +1419,9 @@ const { role, champions, data, enMap, imgMap, runeBuildMap, synergeyMaps, synerg
                     </td>
                     <td id={"synergy-"+c} class="border p-2 text-center text-4xl lg:text-base">
                       0
+                    </td>
+                    <td id={"synergy-"+c} class="border p-2 text-center text-4xl lg:text-base">
+                      {(synergeyRiskMaps[c]).toFixed(1)}
                     </td>
                   </tr>
                 );
